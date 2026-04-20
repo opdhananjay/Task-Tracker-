@@ -1,16 +1,49 @@
-# React + Vite
+# Devops-task-tracker
+A full-stack Task & Testing Management System designed to improve visibility, accountability, and quality in software development teams.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This application enables organizations to manage tasks across multiple roles including Developers, Testers, Team Leads, and Managers. It ensures that every task follows a structured lifecycle from development to unit testing and final QA validation.
 
-Currently, two official plugins are available:
+The system introduces a dual-layer testing approach where both developers and testers independently validate tasks, ensuring higher code quality and reduced production issues.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Key highlights include organization-based access control, role-based dashboards, unit testing tracking with proof, tester validation workflows, and performance analytics for teams.
 
-## React Compiler
+Built using React (Frontend), .NET Core Web API (Backend), and MySQL (Database), the system is designed to be scalable, customizable, and aligned with real-world development workflows.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-## Expanding the ESLint configuration
+* 🔐 Role-Based Authentication (Admin, TL, Developer, Tester)
+* 🏢 Organization-Based Multi-Tenant Structure
+* 📋 Task Creation & Assignment Workflow
+* 🧪 Developer Unit Testing Tracking (with proof)
+* ✅ Tester Validation & Approval System
+* 🔄 End-to-End Task Lifecycle Management
+* 📊 Performance Tracking & Metrics
+* 📌 Role-Based Dashboards
+* 🧾 Proper Task Documentation & Status Tracking
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+
+In many teams, tasks are marked as complete without proper testing visibility or validation. This system ensures:
+
+* Clear tracking of development and testing phases
+* Proof-based unit testing by developers
+* Independent verification by testers
+* Improved accountability and transparency
+* Better performance insights for team leads and managers
+
+
+Frontend: React
+Backend: .NET Core Web API
+Database: MSSQL
+
+1. Organization is created and users are onboarded
+2. Tasks are created and assigned to developers
+3. Developers complete implementation and unit testing
+4. Tasks are assigned to testers for validation
+5. Testers verify and approve/reject tasks
+6. Team Lead performs final review and closes task
+
+
+This project was inspired by real-world challenges in task tracking and testing visibility within development teams. It aims to bring structure, accountability, and quality control into the development lifecycle.
+
+It also demonstrates practical system design, role-based architecture, and real-world problem solving.
+
+
