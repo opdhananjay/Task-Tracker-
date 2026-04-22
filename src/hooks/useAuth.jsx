@@ -12,13 +12,13 @@ const useAuth = () => {
       setLoading(true);
       setError(null);
       // const response = await loginService(payload);
-      const { success, token, data } = { success:true, token:'jwt-token', data:'' }  // response.data;
+      const { success, token, message, data } = { success:true, token:'jwt-token', message:'Login Successfully', data:'' }  // response.data;
       // 🔐 Store token
       debugger;
       localStorage.setItem("token", token);
       // 👤 Store user (recommended)
       // localStorage.setItem("user", JSON.stringify(user));
-      return { success, token, data };
+      return { success, token, message, data };
 
     } catch (err) {
       setError(err.response?.data?.message || "Login failed");

@@ -3,6 +3,7 @@ import logo from "../../assets/logo.png";
 import useAuth from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { LoaderContext } from "../../context/LoaderProvider";
+import toast from "react-hot-toast";
 
 const LoginPage = () => {
 
@@ -36,10 +37,11 @@ const LoginPage = () => {
     const response = await login(formData);
 
     if(response.success && response.token){
+        toast.success(response.message);
         navigate('/dashboard');
     }
     else{
-
+        toast.success(response.message || 'Failed to Login');
     }
 
     setFormData({

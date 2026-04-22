@@ -1,6 +1,18 @@
 import { BellRing, LogOut, Menu, UserRoundPen } from "lucide-react";
+import useAuth from "../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 const Header = ({ toggleSidebar }) => {
+
+    const navigate = useNavigate();
+    
+    const { logout } = useAuth();
+
+    const handleLogout = () => {
+        logout();
+        navigate('/');
+    }
+
     return (
       <>
         <header className="flex items-center justify-between bg-white shadow px-4 py-4">
@@ -35,7 +47,7 @@ const Header = ({ toggleSidebar }) => {
                     </span>
                 </div>
 
-                <button className="cursor-pointer">
+                <button onClick={handleLogout} className="cursor-pointer">
                     <LogOut color="#df0c0c" />
                 </button>
 

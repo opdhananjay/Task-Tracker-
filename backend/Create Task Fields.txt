@@ -1,0 +1,17 @@
+Create Task Fields (Final):
+
+1. Title (Required)
+2. Description (Required)
+3. Task Type (Bug / Feature / Improvement)
+4. Assigned To (Developer)
+5. Assigned Tester (Optional)
+6. Start DateTime (Required)
+7. Due DateTime (Required)
+8. Priority (Low / Medium / High)
+9. Status (Default: Not Started)
+10. Requires Unit Testing (Yes/No)
+11. Acceptance Criteria
+ 
+
+
+
