@@ -1,0 +1,152 @@
+SYSTEM FLOW – DEVOPS TASK TRACKER
+
+1. ADMIN REGISTRATION / LOGIN
+
+* Admin logs into the system
+* Admin is the top-level user
+* Admin has full access
+
+---
+
+2. CREATE ORGANIZATION
+
+* Admin creates a new Organization
+* Organization contains:
+
+  * Name
+  * Description (optional)
+* System generates Organization ID
+
+---
+
+3. USER MANAGEMENT (UNDER ORGANIZATION)
+
+* Admin creates users inside organization
+
+* Each user has:
+
+  * Name
+  * Email
+  * Password
+  * Role (Developer / Tester / Team Lead / Manager)
+
+* Users are linked to OrganizationId
+
+---
+
+4. USER LOGIN FLOW
+
+* User logs in using:
+
+  * Email
+  * Password
+
+* System checks:
+
+  * Valid user
+  * Organization mapping
+
+* After login:
+
+  * User role is identified
+  * Dashboard loads based on role
+
+---
+
+5. ROLE-BASED DASHBOARD
+
+* Developer:
+
+  * View assigned tasks
+  * Update status
+  * Write unit testing
+
+* Tester:
+
+  * View tasks for testing
+  * Approve / Reject tasks
+
+* Team Lead:
+
+  * Create tasks
+  * Assign tasks
+  * Monitor team
+
+* Manager:
+
+  * View reports
+  * View overall performance
+
+---
+
+6. TASK CREATION (TEAM LEAD / MANAGER)
+
+* Create new task with:
+
+  * Title
+  * Description
+  * Task Type
+  * Assigned Developer
+  * Assigned Tester
+  * Priority
+  * Status (default: Not Started)
+  * Due DateTime
+  * Requires Unit Testing
+  * Acceptance Criteria
+  * Tags (optional)
+
+* Task is linked to:
+
+  * OrganizationId
+  * CreatedBy user
+
+---
+
+7. TASK EXECUTION FLOW
+
+* Developer:
+
+  * Starts task → In Progress
+  * Completes development → Dev Done
+  * Adds unit testing status
+
+* Tester:
+
+  * Receives task
+  * Tests based on Acceptance Criteria
+  * Marks:
+
+    * Approved → Completed
+    * Rejected → Back to Developer
+
+---
+
+8. TASK STATUS FLOW
+
+Not Started → In Progress → Dev Done → Testing → Completed
+
+If rejected:
+Testing → In Progress
+
+---
+
+9. NOTIFICATION FLOW (FUTURE)
+
+* Based on DueDateTime:
+
+  * Send reminders
+  * Mark overdue tasks
+
+---
+
+10. REPORTING
+
+* Manager / TL can see:
+
+  * Task completion rate
+  * Developer performance
+  * Testing success rate
+
+---
+
+END OF FLOW
