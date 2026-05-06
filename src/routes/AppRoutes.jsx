@@ -5,6 +5,8 @@ import { Toaster } from "react-hot-toast";
 import DashboardPage from "../pages/DashaboardPage";
 import CreateTaskPage from "../pages/Tasks/CreateTaskPage";
 import TaskListPage from "../pages/Tasks/TaskListPage";
+import CreateUserPage from "../pages/Users/CreateUserPAge";
+import UsersListPage from "../pages/Users/UsersListPage";
 
 const AppRoutes = () => {
     return (
@@ -19,6 +21,11 @@ const AppRoutes = () => {
                     <Route path="tasks">   
                         <Route path="create" element={<CreateTaskPage/>} />
                         <Route path="all" element={<TaskListPage/>} />
+                    </Route>
+
+                    <Route path="users">
+                        <Route path="create" element={<CreateUserPage/>}  />
+                        <Route path="list" element={<UsersListPage/>} />
                     </Route>
 
                 </Route>

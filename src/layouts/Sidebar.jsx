@@ -59,7 +59,11 @@ export const menus = [
     name: 'Users',
     path: '/users',
     icon: Users,
-    roles: ['Manager']
+    roles: ['Manager'],
+    children:[
+      { name:'Create User', path:'/users/create',roles:['Manager'] },
+      { name:'Users List', path:'/users/list',roles:['Manager'] },
+    ]
   },
 
   {

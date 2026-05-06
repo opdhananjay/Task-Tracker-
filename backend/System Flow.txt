@@ -1,0 +1,244 @@
+1. ADMIN REGISTRATION (COMPANY ONBOARDING)
+
+* Company/Admin visits platform
+
+* Admin registers account with:
+
+  * Company Name
+  * Admin Name
+  * Email
+  * Password
+  * Confirm Password
+
+* System automatically creates:
+
+  * Company Workspace
+  * Admin Account
+
+* Admin becomes top-level user of that company
+
+---
+
+2. ADMIN LOGIN
+
+* Admin logs in using:
+
+  * Email
+  * Password
+
+* System validates credentials
+
+* Admin enters dashboard
+
+---
+
+3. USER MANAGEMENT
+
+Admin creates team members inside their company
+
+Admin can create:
+
+* Developer
+* Tester
+* Team Lead
+* Manager
+
+User fields:
+
+* Name
+* Email
+* Password
+* Role
+* Department (optional)
+
+Each user belongs to admin’s company workspace
+
+---
+
+4. USER LOGIN FLOW
+
+Created users login using:
+
+* Email
+* Password
+
+System checks:
+
+* Valid user
+* User role
+* Company mapping
+
+After login:
+
+* Role-based dashboard loads
+
+---
+
+5. ROLE-BASED DASHBOARD
+
+Developer Dashboard:
+
+* View assigned tasks
+* Update progress
+* Submit unit testing details
+
+---
+
+Tester Dashboard:
+
+* View testing queue
+* Approve tasks
+* Reject tasks
+* Add bug comments
+
+---
+
+Team Lead Dashboard:
+
+* Create tasks
+* Assign tasks
+* Monitor developers/testers
+
+---
+
+Manager Dashboard:
+
+* View analytics
+* Track team performance
+* View reports
+
+---
+
+Admin Dashboard:
+
+* Manage users
+* View complete company data
+* Control system settings
+
+---
+
+6. TASK CREATION FLOW
+
+Team Lead / Manager / Admin creates task
+
+Task fields:
+
+* Title
+* Description
+* Task Type
+* Assigned Developer
+* Assigned Tester
+* Start DateTime
+* Due DateTime
+* Priority
+* Status
+* Requires Unit Testing
+* Acceptance Criteria
+* Tags (optional)
+
+Task is linked to:
+
+* Company
+* Created By user
+
+---
+
+7. DEVELOPER WORKFLOW
+
+Developer receives assigned task
+
+Developer actions:
+
+* Start task → In Progress
+* Complete development → Dev Done
+* Add development notes
+* Submit unit testing details
+
+---
+
+8. UNIT TESTING FLOW
+
+Developer fills:
+
+* Test cases written
+* Test cases executed
+* Test result
+* Unit testing notes
+
+Task moves to testing stage
+
+---
+
+9. TESTER WORKFLOW
+
+Tester receives task
+
+Tester checks:
+
+* Acceptance criteria
+* Developer work
+* Unit testing details
+
+Tester actions:
+
+* Approve → Task Completed
+* Reject → Send back to Developer
+
+Tester adds comments/bugs if needed
+
+---
+
+10. TASK STATUS FLOW
+
+Not Started
+→ In Progress
+→ Dev Done
+→ Testing
+→ Completed
+
+If rejected:
+
+Testing
+→ Back to In Progress
+
+---
+
+11. NOTIFICATION FLOW (FUTURE)
+
+System checks DueDateTime
+
+Future features:
+
+* Deadline reminders
+* Overdue alerts
+* Assignment notifications
+
+---
+
+12. REPORTING & ANALYTICS
+
+Manager / Admin / Team Lead can track:
+
+* Task completion rate
+* Developer productivity
+* Tester productivity
+* Pending tasks
+* Overdue tasks
+* Testing success/failure rate
+
+---
+
+13. FUTURE SCALING
+
+Later you can add:
+
+* Email notifications
+* Chat/comments
+* File attachments
+* Subscription plans
+* SaaS billing
+* Mobile app
+
+---
+
+END FLOW

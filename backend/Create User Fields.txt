@@ -1,0 +1,60 @@
+1 . Create User Form - Menu => Users => Create User 
+
+Purpose:Admin should be able to create team members.
+
+•	Full Name - Required
+•	Email     - 
+•	Password
+•	Confirm Password
+•	Role (Developer/Tester/Team Lead/Manager) - Dropdown 
+•	Department,            
+•   Phone Number, 
+•   Employee ID
+
+Buttons
+    Create User
+
+Validation
+    Required field validation
+    Email validation
+    Password match validation
+
+UI Requirements
+    Use React Hook Form
+    Use Tailwind CSS
+    Responsive layout
+    Follow same styling as Create Task form
+
+-----------------------------------------------------
+
+2 . Users List Form
+
+Menu => Users => Users List
+
+Purpose:Admin should see all created users.
+
+
+Table Columns
+    Full Name
+    Email
+    Role
+    Department
+    Phone Number
+    Employee ID
+    Status
+    Actions
+
+
+Actions
+    Edit
+    Delete
+    View
+
+library - Use TanStack Table
+
+Use static dummy data for now.
+
+
+- 
+
+
