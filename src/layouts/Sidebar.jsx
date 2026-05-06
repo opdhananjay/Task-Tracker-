@@ -66,7 +66,10 @@ export const menus = [
     name: 'Organization',
     path: '/organization',
     icon: Building,
-    roles: ['Manager']
+    roles: ['Manager'],
+    children: [
+      { name:'Organization Settings', path: '/organization/settings' ,roles: ['Manager'] }
+    ]
   },
 
   {

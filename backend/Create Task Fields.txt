@@ -11,6 +11,21 @@ Create Task Fields (Final):
 9. Status (Default: Not Started)
 10. Requires Unit Testing (Yes/No)
 11. Acceptance Criteria
+
+
+Task List 
+
+1. Title 
+2. Task Type 
+3. Assigned To
+4. Assigned Tester
+5. Start DateTime
+6. Due DateTime
+7. Priority
+8. Status
+9. Required Unit Testing
+
+
  
 
 
