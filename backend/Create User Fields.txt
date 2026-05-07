@@ -1,3 +1,10 @@
+
+1. take source from github 
+2. open terminal and then do - npm install
+3. finally run               - npm run dev
+
+---------------------- Below Taks ---------------------------------
+
 1 . Create User Form - Menu => Users => Create User 
 
 Purpose:Admin should be able to create team members.

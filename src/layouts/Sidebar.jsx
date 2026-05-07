@@ -7,7 +7,8 @@ import {
   BarChart3,
   Users,
   Building,
-  User
+  User,
+  SquareFunction  
 } from "lucide-react";
 
 import { useState } from "react";
@@ -26,29 +27,53 @@ export const menus = [
   {
     name: 'Tasks',
     icon: ClipboardList,
-    roles: ['Developer', 'TeamLeader', 'Manager', 'Tester'],
+    roles: ['TeamLeader', 'Manager'],
     children: [
-      { name: 'My Tasks', path: '/tasks/my', roles: ['Developer', 'Tester'] },
-      { name: 'Assigned Tasks', path: '/tasks/assigned', roles: ['TeamLeader', 'Manager'] },
-      { name: 'All Tasks', path: '/tasks/all', roles: ['Manager'] },
+      { name: 'All Tasks', path: '/tasks/all', roles: ['TeamLeader','Manager'] },
       { name: 'Create Task', path: '/tasks/create', roles: ['TeamLeader', 'Manager'] }
+    ]
+  },
+
+  {
+    name: 'Development',
+    icon: SquareFunction,
+    roles: ['Developer'],
+    children: [
+      {
+        name: 'My Tasks',
+        path: '/development/mytasks',
+        roles: ['Developer']
+      },
+      {
+        name: 'Unit Testing',
+        path: '/development/unittesting',
+        roles: ['Developer']
+      }
     ]
   },
 
   {
     name: 'Testing',
     icon: Bug,
-    roles: ['Tester', 'TeamLeader', 'Manager'],
+    roles: ['Tester', 'Manager'],
     children: [
-      { name: 'Pending Testing', path: '/testing/pending', roles: ['Tester'] },
-      { name: 'Tested Tasks', path: '/testing/completed', roles: ['Tester', 'TeamLeader', 'Manager'] }
+      {
+        name: 'Testing Queue',
+        path: '/testing/queue',
+        roles: ['Tester']
+      },
+      {
+        name: 'Review Tasks',
+        path: '/testing/review',
+        roles: ['Tester']
+      }
     ]
   },
 
   {
     name: 'Reports',
     icon: BarChart3,
-    roles: ['TeamLeader', 'Manager'],
+    roles: ['TeamLeader', 'Manager', 'Developer', 'Tester'],
     children: [
       { name: 'Developer Performance', path: '/reports/developer', roles: ['TeamLeader', 'Manager'] },
       { name: 'Testing Reports', path: '/reports/testing', roles: ['Manager'] }
