@@ -25,7 +25,7 @@ const useAuth = () => {
       return { success: true };
 
     } finally {
-      setLoading(false);
+       setLoading(false);
     }
   };
 

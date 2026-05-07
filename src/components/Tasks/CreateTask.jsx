@@ -3,6 +3,7 @@ import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import DatePicker from "react-multi-date-picker";
 import TimePicker from "react-multi-date-picker/plugins/time_picker";
+import { TASK_PRIORITY, TASK_STATUS, TASK_TYPE } from "../../Enums/appEnums";
 
 const CreateTask = () => {
 
@@ -58,9 +59,11 @@ const CreateTask = () => {
                                     <option value="">
                                         Select Task Type
                                     </option>
-                                    <option value="BUG">Bug</option>
-                                    <option value="FEATURE">Feature</option>
-                                    <option value="IMPROVEMENT">Improvement</option>
+                                    {
+                                        Object.values(TASK_TYPE).map((type)=>(
+                                            <option key={type} value={type}>{type}</option>
+                                        ))
+                                    }
                                     </select>
 
                                     {errors.taskType && (
@@ -204,38 +207,19 @@ const CreateTask = () => {
 
                                 <div className="flex flex-1 items-center gap-6">
 
-                                    {/* Low */}
-                                    <label className="flex items-center gap-2 cursor-pointer leading-none">
-                                        <input
-                                            type="radio"
-                                            value="LOW"
-                                            {...register("priority", { required: "Priority is required" })}
-                                            className="mt-[1px] text-green-600 focus:ring-green-500"
-                                        />
-                                        <span className="text-sm text-gray-700">Low</span>
-                                    </label>
-
-                                    {/* Medium */}
-                                    <label className="flex items-center gap-2 cursor-pointer leading-none">
-                                        <input
-                                            type="radio"
-                                            value="MEDIUM"
-                                            {...register("priority")}
-                                            className="mt-[1px] text-yellow-600 focus:ring-yellow-500"
-                                        />
-                                        <span className="text-sm text-gray-700">Medium</span>
-                                    </label>
-
-                                    {/* High */}
-                                    <label className="flex items-center gap-2 cursor-pointer leading-none">
-                                        <input
-                                            type="radio"
-                                            value="HIGH"
-                                            {...register("priority")}
-                                            className="mt-[1px] text-red-600 focus:ring-red-500"
-                                        />
-                                        <span className="text-sm text-gray-700">High</span>
-                                    </label>
+                                    {
+                                        Object.values(TASK_PRIORITY).map((priority) => (
+                                            <label key={priority} className="flex items-center gap-2 cursor-pointer leading-none">
+                                                <input
+                                                    type="radio"
+                                                    value={priority}
+                                                    {...register("priority", { required: "Priority is required" })}
+                                                    className="mt-[1px] text-green-600 focus:ring-green-500"
+                                                />
+                                                <span className="text-sm text-gray-700">{priority}</span>
+                                            </label>
+                                        ))
+                                    }
 
                                     {errors.priority && (
                                         <p className="text-red-500 text-sm ml-8 mt-1">
@@ -265,11 +249,20 @@ const CreateTask = () => {
                                         Select Status
                                     </option>
 
-                                    <option value="NOT_STARTED">Not Started</option>
+                                    {
+                                        Object.values(TASK_STATUS).map((status)=>(
+                                            <option key={status} value={status}>
+                                                {status.replaceAll("_"," ")}
+                                            </option>
+                                        ))
+                                    }
+
+
+                                    {/* <option value="NOT_STARTED">Not Started</option>
                                     <option value="IN_PROGRESS">In Progress</option>
                                     <option value="DEV_DONE">Dev Done</option>
                                     <option value="TESTING">Testing</option>
-                                    <option value="COMPLETED">Completed</option>
+                                    <option value="COMPLETED">Completed</option> */}
                                     </select>
 
                                     {errors.status && (

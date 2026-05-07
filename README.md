@@ -1,49 +1,206 @@
-# Devops-task-tracker
-A full-stack Task & Testing Management System designed to improve visibility, accountability, and quality in software development teams.
+# DevOps Task Tracker
 
-This application enables organizations to manage tasks across multiple roles including Developers, Testers, Team Leads, and Managers. It ensures that every task follows a structured lifecycle from development to unit testing and final QA validation.
+A full-stack **Task Management & Testing Workflow System** built to solve real-world issues in software teams where task tracking, unit testing visibility, and QA validation are often poorly managed.
 
-The system introduces a dual-layer testing approach where both developers and testers independently validate tasks, ensuring higher code quality and reduced production issues.
+This platform helps organizations streamline the complete development lifecycle by ensuring every task moves through proper development, unit testing, and tester validation before completion.
 
-Key highlights include organization-based access control, role-based dashboards, unit testing tracking with proof, tester validation workflows, and performance analytics for teams.
+---
 
-Built using React (Frontend), .NET Core Web API (Backend), and MySQL (Database), the system is designed to be scalable, customizable, and aligned with real-world development workflows.
+## Problem Statement
 
+In many companies:
 
-* 🔐 Role-Based Authentication (Admin, TL, Developer, Tester)
-* 🏢 Organization-Based Multi-Tenant Structure
-* 📋 Task Creation & Assignment Workflow
-* 🧪 Developer Unit Testing Tracking (with proof)
-* ✅ Tester Validation & Approval System
-* 🔄 End-to-End Task Lifecycle Management
-* 📊 Performance Tracking & Metrics
-* 📌 Role-Based Dashboards
-* 🧾 Proper Task Documentation & Status Tracking
+- Tasks are tracked manually in Excel sheets
+- Developers mark tasks as completed without proper unit testing proof
+- Testers lack visibility into development progress
+- Managers struggle to track team performance
+- Task accountability is often unclear
 
+This project solves these problems by introducing a structured workflow where every task is properly assigned, tested, validated, and documented.
 
-In many teams, tasks are marked as complete without proper testing visibility or validation. This system ensures:
+---
 
-* Clear tracking of development and testing phases
-* Proof-based unit testing by developers
-* Independent verification by testers
-* Improved accountability and transparency
-* Better performance insights for team leads and managers
+## Core Features
 
+### Authentication & Company Onboarding
+- Admin registration
+- Company workspace creation during signup
+- Secure login/logout
+- Role-based authentication
 
-Frontend: React
-Backend: .NET Core Web API
-Database: MSSQL
+---
 
-1. Organization is created and users are onboarded
-2. Tasks are created and assigned to developers
-3. Developers complete implementation and unit testing
-4. Tasks are assigned to testers for validation
-5. Testers verify and approve/reject tasks
-6. Team Lead performs final review and closes task
+## User Management
+Admin can create and manage:
 
+- Developers
+- Testers
+- Team Leads
+- Managers
 
-This project was inspired by real-world challenges in task tracking and testing visibility within development teams. It aims to bring structure, accountability, and quality control into the development lifecycle.
+---
 
-It also demonstrates practical system design, role-based architecture, and real-world problem solving.
+## Task Management
+- Create tasks
+- Assign developers
+- Assign testers
+- Set deadlines
+- Track task priorities
+- Manage task lifecycle
 
+---
 
+## Developer Workflow
+Developers can:
+
+- View assigned tasks
+- Update task progress
+- Submit development notes
+- Perform unit testing
+- Upload unit testing proof/details
+
+---
+
+## Tester Workflow
+Testers can:
+
+- View testing queue
+- Validate completed development tasks
+- Approves tasks
+- Reject tasks with bug comments
+
+---
+
+## Role-Based Dashboards
+
+### Admin
+- Manage users
+- View overall company data
+
+### Manager
+- View reports
+- Monitor performance
+- Assign tasks
+
+### Team Lead
+- Assign tasks
+- Track team progress
+
+### Developer
+- Manage assigned work
+- Submit unit testing
+
+### Tester
+- Validate completed tasks
+
+---
+
+## Task Lifecycle Flow
+
+```bash
+Admin Signup
+↓
+Create Team Members
+↓
+Task Creation
+↓
+Developer Implementation
+↓
+Developer Unit Testing
+↓
+Tester Validation
+↓
+Task Completion
+```
+
+---
+
+## Task Status Flow
+
+```bash
+Not Started
+→ In Progress
+→ Dev Done
+→ Testing
+→ Completed
+```
+
+If rejected:
+
+```bash
+Testing
+→ Back to In Progress
+```
+
+---
+
+## Tech Stack
+
+### Frontend
+- React
+- Tailwind CSS
+- React Hook Form
+- TanStack Table
+- Axios
+
+---
+
+### Backend
+- .NET Core Web API
+- Entity Framework Core
+- JWT Authentication
+
+---
+
+### Database
+- MySQL / SQL Server
+
+---
+
+## Future Enhancements
+
+- Email notifications
+- Deadline reminders
+- File attachments
+- Comments system
+- Advanced analytics
+- SaaS subscription model
+- Mobile app support
+
+---
+
+## Why This Project?
+
+This project was inspired by real problems faced in software teams where task tracking and testing workflows were poorly managed.
+
+It demonstrates:
+
+- Real-world system design
+- Role-based architecture
+- Multi-user workflow management
+- Full-stack development
+- Product thinking
+- Business problem solving
+
+---
+
+## Project Goal
+
+Build a scalable system that improves:
+
+- Accountability
+- Code quality
+- Testing visibility
+- Team productivity
+- Task transparency
+
+---
+
+## Author
+
+**Dhananjay**
+
+Built as both:
+
+- A real-world portfolio project
+- A potential SaaS product for software teams
