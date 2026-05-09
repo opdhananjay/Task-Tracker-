@@ -1,0 +1,43 @@
+{
+  "firstName": "Rahul",
+  "lastName": "Sharma",
+  "email": "manager@gmail.com",
+  "password": "manager123",
+  "role": "Manager",
+  "department": "Management",
+  "phoneNumber": "9876543211",
+  "employeeId": "MGR001"
+}
+
+{
+  "firstName": "Amit",
+  "lastName": "Joshi",
+  "email": "teamlead@gmail.com",
+  "password": "teamlead123",
+  "role": "TeamLeader",
+  "department": "Development",
+  "phoneNumber": "9876543212",
+  "employeeId": "TL001"
+}
+
+{
+  "firstName": "Priya",
+  "lastName": "Sharma",
+  "email": "tester@gmail.com",
+  "password": "tester123",
+  "role": "Tester",
+  "department": "QA",
+  "phoneNumber": "9876543214",
+  "employeeId": "QA001"
+}
+
+{
+  "firstName": "Rohit",
+  "lastName": "Patil",
+  "email": "developer@gmail.com",
+  "password": "developer123",
+  "role": "Developer",
+  "department": "Backend",
+  "phoneNumber": "9876543213",
+  "employeeId": "DEV001"
+}

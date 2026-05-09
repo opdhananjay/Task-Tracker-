@@ -1,3 +1,12 @@
+
+export const USER_ROLES_MAIN = [
+  "Admin",
+  "Manager",
+  "TeamLeader",
+  "Developer",
+  "Tester"
+]
+
 // FormName - Create Task 
 export const TASK_STATUS = {
     NOT_STARTED: "NOT_STARTED",

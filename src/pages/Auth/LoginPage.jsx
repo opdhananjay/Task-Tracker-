@@ -33,10 +33,17 @@ const LoginPage = () => {
 
     if(!handleValidations()) return false;
 
-    // API CALL 
-    const response = await login(formData);
+    const dataToSend = {
+      email:formData.email,
+      password:formData.password
+    }
 
-    if(response.success && response.token){
+    console.log('formdata',formData);
+    
+    // API CALL 
+    const response = await login(dataToSend);
+    debugger;
+    if(response.success){
         toast.success(response.message);
         navigate('/dashboard');
     }

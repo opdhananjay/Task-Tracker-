@@ -1,6 +1,8 @@
 import { useContext, useState } from "react";
 import { loginService } from "../services/authService";
 import { LoaderContext } from "../context/LoaderProvider";
+import { data } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const useAuth = () => {
 
@@ -8,22 +10,26 @@ const useAuth = () => {
   const { setLoading } = useContext(LoaderContext);
 
   const login = async (payload) => {
+    debugger;
     try {
       setLoading(true);
       setError(null);
+
       // const response = await loginService(payload);
-      const { success, token, message, data } = { success:true, token:'jwt-token', message:'Login Successfully', data:'' }  // response.data;
+      //const { success, token, message, data } = { success:true, token:'jwt-token', message:'Login Successfully', data:'' }  // response.data;
       // 🔐 Store token
-      debugger;
-      localStorage.setItem("token", token);
+      //debugger;
+      //localStorage.setItem("token", token);
       // 👤 Store user (recommended)
       // localStorage.setItem("user", JSON.stringify(user));
-      return { success, token, message, data };
 
-    } catch (err) {
+      const res = await loginService(payload);
+      debugger;
+      return res.data;
+
+    } catch (error) {
+      toast.error(error.response?.data?.message);
       setError(err.response?.data?.message || "Login failed");
-      return { success: true };
-
     } finally {
        setLoading(false);
     }
