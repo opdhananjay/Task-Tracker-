@@ -13,8 +13,26 @@ const CreateTask = () => {
 
     const { register,control, handleSubmit, formState:{errors,isValid}, reset} = useForm();
 
-    const onSubmit = (e) => {
-        
+    const onSubmit = (data) => {
+
+        console.log('data',data);
+
+        var js = {
+            "id": 0,
+            "title": "string",
+            "description": "string",
+            "taskType": "string",
+            "developerId": 0,
+            "testerId": 0,
+            "createdBy": 0,
+            "startDateTime": "2026-05-10T17:06:56.476Z",
+            "dueDateTime": "2026-05-10T17:06:56.476Z",
+            "priority": "string",
+            "status": "string",
+            "unitTestingStatus": "string",
+            "acceptanceCriteria": "string"
+        }
+
     }
 
     return (
