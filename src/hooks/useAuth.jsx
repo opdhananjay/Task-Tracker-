@@ -24,12 +24,11 @@ const useAuth = () => {
       // localStorage.setItem("user", JSON.stringify(user));
 
       const res = await loginService(payload);
-      debugger;
       return res.data;
 
     } catch (error) {
-      toast.error(error.response?.data?.message);
-      setError(err.response?.data?.message || "Login failed");
+      //toast.error(error.response?.data?.message);
+      setError(error.response?.data?.message || "Login failed");
     } finally {
        setLoading(false);
     }

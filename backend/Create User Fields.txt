@@ -15,7 +15,7 @@ Purpose:Admin should be able to create team members.
 •	Confirm Password
 •	Role (Developer/Tester/Team Lead/Manager) - Dropdown 
 •	Department,            
-•   Phone Number, 
+•   Phone Number,
 •   Employee ID
 
 Buttons

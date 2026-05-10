@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 
 const LoginPage = () => {
 
-  const { login,logout } = useAuth();
+  const { login,logout,error } = useAuth();
   
   const navigate = useNavigate();
   
@@ -15,7 +15,7 @@ const LoginPage = () => {
     email:'',
     password:''
   });
-
+  
   const handleChange = (e) => {
 
     const { name,value } = e.target;
@@ -38,17 +38,16 @@ const LoginPage = () => {
       password:formData.password
     }
 
-    console.log('formdata',formData);
-    
     // API CALL 
     const response = await login(dataToSend);
-    debugger;
     if(response.success){
         toast.success(response.message);
+        const role = response.data.role || '';
+        localStorage.setItem('role',role);
         navigate('/dashboard');
     }
     else{
-        toast.success(response.message || 'Failed to Login');
+        toast.error(response.message || error || 'Failed to Login');
     }
 
     setFormData({

@@ -11,7 +11,7 @@ const DashboardPage = () => {
         toast.success('Welcome Dhananjay !');
     },[]);
 
-    const userRole = localStorage.getItem('role') || 'Developer';
+    const userRole = localStorage.getItem('role');
 
     const renderDashboard = () => {
 
