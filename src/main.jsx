@@ -8,7 +8,7 @@ import { LoaderProvider } from './context/LoaderProvider'
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
     <LoaderProvider>
-       <App />
+      <App />
     </LoaderProvider>
   </BrowserRouter>
 )

@@ -1,194 +1,241 @@
-1. ADMIN REGISTRATION (COMPANY ONBOARDING)
+=========================================================
+DEVOPS TASK TRACKER – COMPLETE SYSTEM FLOW
+=========================================================
 
-* Company/Admin visits platform
+PROJECT OVERVIEW
+---------------------------------------------------------
 
-* Admin registers account with:
+DevOps Task Tracker is a role-based task, testing,
+and issue management system designed for software teams.
 
-  * Company Name
-  * Admin Name
-  * Email
-  * Password
-  * Confirm Password
+The system helps organizations manage:
 
-* System automatically creates:
+- Team members
+- Development tasks
+- Testing workflows
+- Bug/Issue tracking
+- Team productivity
+- Development lifecycle tracking
 
-  * Company Workspace
-  * Admin Account
+The platform supports:
 
-* Admin becomes top-level user of that company
+- Admin
+- Manager
+- Team Lead
+- Developer
+- Tester
 
----
+=========================================================
+1. COMPANY / ADMIN REGISTRATION FLOW
+=========================================================
 
-2. ADMIN LOGIN
+A company/admin visits the platform.
 
-* Admin logs in using:
+Admin registers with:
 
-  * Email
-  * Password
+- Company Name
+- Admin Name
+- Email
+- Password
+- Confirm Password
 
-* System validates credentials
+System automatically creates:
 
-* Admin enters dashboard
+- Company Workspace
+- Admin Account
+- Organization Profile
 
----
+Admin becomes top-level user of that company workspace.
 
-3. USER MANAGEMENT
+=========================================================
+2. ADMIN LOGIN FLOW
+=========================================================
 
-Admin creates team members inside their company
+Admin logs in using:
 
-Admin can create:
+- Email
+- Password
 
-* Developer
-* Tester
-* Team Lead
-* Manager
+System validates:
+
+- Credentials
+- Company mapping
+- User status
+
+After successful login:
+
+- Admin Dashboard loads
+
+=========================================================
+3. ORGANIZATION / COMPANY MANAGEMENT
+=========================================================
+
+Each registered company has its own isolated workspace.
+
+Organization contains:
+
+- Organization Name
+- Email
+- Phone Number
+- Address
+- Organization Type
+- Created By
+- Created Date
+
+All users and tasks belong to organization.
+
+=========================================================
+4. USER MANAGEMENT FLOW
+=========================================================
+
+Admin can create users inside organization.
+
+Available Roles:
+
+- Manager
+- Team Lead
+- Developer
+- Tester
 
 User fields:
 
-* Name
-* Email
-* Password
-* Role
-* Department (optional)
+- First Name
+- Last Name
+- Email
+- Password
+- Role
+- Department
+- Phone Number
+- Employee ID
+- OrganizationId
 
-Each user belongs to admin’s company workspace
+Every user is linked to organization.
 
----
+=========================================================
+5. USER LOGIN FLOW
+=========================================================
 
-4. USER LOGIN FLOW
+Users login using:
 
-Created users login using:
+- Email
+- Password
 
-* Email
-* Password
+System validates:
 
-System checks:
-
-* Valid user
-* User role
-* Company mapping
+- User exists
+- Password valid
+- Role valid
+- Organization mapping
+- User active status
 
 After login:
 
-* Role-based dashboard loads
+- Role-based dashboard loads
 
----
+=========================================================
+6. ROLE-BASED DASHBOARD FLOW
+=========================================================
 
-5. ROLE-BASED DASHBOARD
+---------------------------------------------------------
+ADMIN DASHBOARD
+---------------------------------------------------------
 
-Developer Dashboard:
+Admin can:
 
-* View assigned tasks
-* Update progress
-* Submit unit testing details
+- Create users
+- Manage all users
+- Manage organization settings
+- View all tasks
+- View all issues
+- View analytics/reports
 
----
+---------------------------------------------------------
+MANAGER DASHBOARD
+---------------------------------------------------------
 
-Tester Dashboard:
+Manager can:
 
-* View testing queue
-* Approve tasks
-* Reject tasks
-* Add bug comments
+- Create tasks
+- Update tasks
+- Monitor teams
+- View reports
+- View issues
+- Convert issues to tasks
 
----
+---------------------------------------------------------
+TEAM LEAD DASHBOARD
+---------------------------------------------------------
 
-Team Lead Dashboard:
+Team Lead can:
 
-* Create tasks
-* Assign tasks
-* Monitor developers/testers
+- Create tasks
+- Assign developers/testers
+- Track progress
+- Monitor pending tasks
+- Review development/testing workflow
 
----
+---------------------------------------------------------
+DEVELOPER DASHBOARD
+---------------------------------------------------------
 
-Manager Dashboard:
+Developer can:
 
-* View analytics
-* Track team performance
-* View reports
+- View assigned tasks
+- Start tasks
+- Update task progress
+- Submit development notes
+- Submit unit testing details
 
----
+---------------------------------------------------------
+TESTER DASHBOARD
+---------------------------------------------------------
 
-Admin Dashboard:
+Tester handles BOTH:
 
-* Manage users
-* View complete company data
-* Control system settings
+1. Testing Responsibilities
+2. Support / Issue Reporting Responsibilities
 
----
+Tester can:
 
-6. TASK CREATION FLOW
+- Create issues
+- Report bugs
+- View testing queue
+- Approve tasks
+- Reject tasks
+- Add testing comments
 
-Team Lead / Manager / Admin creates task
+=========================================================
+7. TASK MANAGEMENT FLOW
+=========================================================
+
+Task can be created by:
+
+- Admin
+- Manager
+- Team Lead
 
 Task fields:
 
-* Title
-* Description
-* Task Type
-* Assigned Developer
-* Assigned Tester
-* Start DateTime
-* Due DateTime
-* Priority
-* Status
-* Requires Unit Testing
-* Acceptance Criteria
-* Tags (optional)
+- Title
+- Description
+- Task Type
+- Developer
+- Tester
+- Priority
+- Status
+- Start DateTime
+- Due DateTime
+- Unit Testing Status
+- Acceptance Criteria
+- Issue Reference (optional)
+- OrganizationId
+- CreatedBy
 
-Task is linked to:
+=========================================================
+8. TASK STATUS FLOW
+=========================================================
 
-* Company
-* Created By user
-
----
-
-7. DEVELOPER WORKFLOW
-
-Developer receives assigned task
-
-Developer actions:
-
-* Start task → In Progress
-* Complete development → Dev Done
-* Add development notes
-* Submit unit testing details
-
----
-
-8. UNIT TESTING FLOW
-
-Developer fills:
-
-* Test cases written
-* Test cases executed
-* Test result
-* Unit testing notes
-
-Task moves to testing stage
-
----
-
-9. TESTER WORKFLOW
-
-Tester receives task
-
-Tester checks:
-
-* Acceptance criteria
-* Developer work
-* Unit testing details
-
-Tester actions:
-
-* Approve → Task Completed
-* Reject → Send back to Developer
-
-Tester adds comments/bugs if needed
-
----
-
-10. TASK STATUS FLOW
+Task lifecycle:
 
 Not Started
 → In Progress
@@ -196,49 +243,216 @@ Not Started
 → Testing
 → Completed
 
-If rejected:
+If tester rejects:
 
 Testing
-→ Back to In Progress
+→ In Progress
 
----
+=========================================================
+9. DEVELOPER WORKFLOW
+=========================================================
 
-11. NOTIFICATION FLOW (FUTURE)
+Developer receives assigned task.
 
-System checks DueDateTime
+Developer actions:
 
-Future features:
+- Start task
+- Update progress
+- Complete development
+- Add development notes
+- Submit unit testing details
 
-* Deadline reminders
-* Overdue alerts
-* Assignment notifications
+Developer updates:
 
----
+Not Started
+→ In Progress
+→ Dev Done
 
-12. REPORTING & ANALYTICS
+=========================================================
+10. UNIT TESTING FLOW
+=========================================================
 
-Manager / Admin / Team Lead can track:
+Developer submits:
 
-* Task completion rate
-* Developer productivity
-* Tester productivity
-* Pending tasks
-* Overdue tasks
-* Testing success/failure rate
+- Test cases written
+- Test cases executed
+- Test results
+- Unit testing notes
 
----
+Unit testing status:
 
-13. FUTURE SCALING
+- Pending
+- Completed
+- Failed
 
-Later you can add:
+Task then moves to testing stage.
 
-* Email notifications
-* Chat/comments
-* File attachments
-* Subscription plans
-* SaaS billing
-* Mobile app
+=========================================================
+11. TESTER VALIDATION FLOW
+=========================================================
 
----
+Tester receives task for validation.
 
-END FLOW
+Tester verifies:
+
+- Acceptance criteria
+- Functionality
+- Unit testing details
+- Development quality
+
+Tester actions:
+
+Approve:
+Testing → Completed
+
+Reject:
+Testing → In Progress
+
+Tester can add:
+
+- Bug comments
+- Testing notes
+- Rejection reason
+
+=========================================================
+12. ISSUE MANAGEMENT FLOW (FUTURE MODULE)
+=========================================================
+
+(Current focus remains Task Tracker module.
+Issue module will be developed after task workflow.)
+
+---------------------------------------------------------
+WHY ISSUE MANAGEMENT?
+---------------------------------------------------------
+
+Testers/support teams may find:
+
+- Bugs
+- UI issues
+- API failures
+- Performance problems
+- Feature requests
+
+Instead of manual communication,
+issues will be tracked in system.
+
+---------------------------------------------------------
+ISSUE CREATION FLOW
+---------------------------------------------------------
+
+Tester creates issue with:
+
+- Issue Title
+- Description
+- Issue Type
+- Priority
+- Screenshot/File (optional)
+- Status
+- OrganizationId
+
+Issue Types:
+
+- Bug
+- Enhancement
+- Feature Request
+- Support Issue
+
+Issue Status:
+
+- Open
+- Converted
+- Closed
+- Rejected
+
+=========================================================
+13. ISSUE TO TASK CONVERSION FLOW
+=========================================================
+
+Manager/Team Lead reviews issue.
+
+If development required:
+
+Issue → Convert To Task
+
+Task can reference:
+
+IssueId
+
+Flow:
+
+Tester reports issue
+→ Manager reviews
+→ Convert to task
+→ Developer fixes
+→ Tester validates
+→ Issue closes
+
+=========================================================
+14. REPORTING & ANALYTICS
+=========================================================
+
+Admin / Manager / Team Lead can view:
+
+- Total tasks
+- Pending tasks
+- Completed tasks
+- Overdue tasks
+- Developer productivity
+- Tester productivity
+- Issue statistics
+- Testing success/failure rate
+
+=========================================================
+15. NOTIFICATION FLOW (FUTURE)
+=========================================================
+
+Future notification features:
+
+- Due date reminders
+- Overdue alerts
+- Task assignment alerts
+- Testing notifications
+- Email notifications
+
+=========================================================
+16. FUTURE SCALING
+=========================================================
+
+Future enhancements:
+
+- File attachments
+- Task comments/chat
+- Email integration
+- Mobile app
+- SaaS subscription plans
+- Activity logs
+- Audit tracking
+- Real-time notifications
+- Role permission management
+
+=========================================================
+17. COMPLETE SYSTEM FLOW
+=========================================================
+
+Company/Admin Registration
+→ Organization Created
+→ Users Created
+→ Users Login
+→ Tasks Created
+→ Developer Works
+→ Unit Testing
+→ Tester Validation
+→ Task Completion
+
+Future Extended Flow:
+
+Tester Reports Issue
+→ Manager Reviews
+→ Convert Issue To Task
+→ Developer Fixes
+→ Tester Validates
+→ Issue Closed
+
+=========================================================
+END OF SYSTEM FLOW
+=========================================================

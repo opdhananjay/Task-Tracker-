@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { LoaderContext } from "../context/LoaderProvider";
-import { CreateTaskService, GetTaksService } from "../services/taskService";
+import { CreateTaskService, GetTaksService, GetTaskByIdService } from "../services/taskService";
 
 const useTask = () => {
 
@@ -31,12 +31,29 @@ const useTask = () => {
         }
     }
 
-    const getTasks = async (dataToSend) => {
+    const updateTaks = async (dataToSend) => {
         try{
             setLoading(true);
             setError(null);
 
-            const response = await GetTaksService(dataToSend);
+            const response = await CreateTaskService(dataToSend);
+            return response.data;
+        }
+        catch(err){
+            setError(err.response.data.message || "Failed to Create Task");
+            return null;
+        }
+        finally{
+            setLoading(false);
+        }
+    }
+
+    const getTasks = async (organizationId) => {
+        try{
+            setLoading(true);
+            setError(null);
+
+            const response = await GetTaksService(organizationId);
             return response.data;
 
         }
@@ -49,8 +66,25 @@ const useTask = () => {
         }
     }
 
+    const getTaskById = async (taskId) => {
+        try{
+            setLoading(true);
+            setError(null);
 
-    return { createTaks, getTasks, error };
+            const response = await GetTaskByIdService(taskId);
+            return response.data;
+
+        }
+        catch(err){
+            setError(err.response.data.message || "Failed to Fetch Task");
+            return null;
+        }
+        finally{
+            setLoading(false);
+        }
+    }
+
+    return { createTaks, updateTaks, getTasks, getTaskById, error };
 }
 
 export default useTask;

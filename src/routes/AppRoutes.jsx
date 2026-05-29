@@ -7,6 +7,7 @@ import CreateTaskPage from "../pages/Tasks/CreateTaskPage";
 import TaskListPage from "../pages/Tasks/TaskListPage";
 import CreateUserPage from "../pages/Users/CreateUserPAge";
 import UsersListPage from "../pages/Users/UsersListPage";
+import OragnizationProfilePage from "../pages/Organization/OragnizationProfilePage";
 
 const AppRoutes = () => {
     return (
@@ -19,13 +20,17 @@ const AppRoutes = () => {
                     <Route path="/dashboard" element={<DashboardPage/>} />
 
                     <Route path="tasks">   
-                        <Route path="create" element={<CreateTaskPage/>} />
+                        <Route path="create/:taskId?/:action?" element={<CreateTaskPage/>} />
                         <Route path="all" element={<TaskListPage/>} />
                     </Route>
 
                     <Route path="users">
                         <Route path="create" element={<CreateUserPage/>}  />
                         <Route path="list" element={<UsersListPage/>} />
+                    </Route>
+
+                    <Route path="organization">
+                        <Route path="profile" element={<OragnizationProfilePage/>} />
                     </Route>
 
                 </Route>

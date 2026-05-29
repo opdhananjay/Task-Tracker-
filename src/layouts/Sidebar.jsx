@@ -21,33 +21,33 @@ export const menus = [
     name: 'Dashboard',
     path: '/dashboard',
     icon: LayoutDashboard,
-    roles: ['Developer', 'TeamLeader', 'Manager', 'Tester']
+    roles: ['Developer', 'TeamLeader', 'Manager', 'Tester','Admin']
   },
 
   {
     name: 'Tasks',
     icon: ClipboardList,
-    roles: ['TeamLeader', 'Manager'],
+    roles: ['TeamLeader', 'Manager', 'Admin'],
     children: [
-      { name: 'All Tasks', path: '/tasks/all', roles: ['TeamLeader','Manager'] },
-      { name: 'Create Task', path: '/tasks/create', roles: ['TeamLeader', 'Manager'] }
+      { name: 'All Tasks', path: '/tasks/all', roles: ['TeamLeader','Manager', 'Admin'] },
+      { name: 'Create Task', path: '/tasks/create', roles: ['TeamLeader', 'Manager', 'Admin'] }
     ]
   },
 
   {
     name: 'Development',
     icon: SquareFunction,
-    roles: ['Developer'],
+    roles: ['Developer','Admin'],
     children: [
       {
         name: 'My Tasks',
         path: '/development/mytasks',
-        roles: ['Developer']
+        roles: ['Developer','Admin']
       },
       {
         name: 'Unit Testing',
         path: '/development/unittesting',
-        roles: ['Developer']
+        roles: ['Developer','Admin']
       }
     ]
   },
@@ -55,17 +55,17 @@ export const menus = [
   {
     name: 'Testing',
     icon: Bug,
-    roles: ['Tester', 'Manager'],
+    roles: ['Tester', 'Manager', 'Admin'],
     children: [
       {
         name: 'Testing Queue',
         path: '/testing/queue',
-        roles: ['Tester']
+        roles: ['Tester','Admin']
       },
       {
         name: 'Review Tasks',
         path: '/testing/review',
-        roles: ['Tester']
+        roles: ['Tester','Admin']
       }
     ]
   },
@@ -73,10 +73,10 @@ export const menus = [
   {
     name: 'Reports',
     icon: BarChart3,
-    roles: ['TeamLeader', 'Manager', 'Developer', 'Tester'],
+    roles: ['TeamLeader', 'Manager', 'Developer', 'Tester','Admin'],
     children: [
-      { name: 'Developer Performance', path: '/reports/developer', roles: ['TeamLeader', 'Manager'] },
-      { name: 'Testing Reports', path: '/reports/testing', roles: ['Manager'] }
+      { name: 'Developer Performance', path: '/reports/developer', roles: ['TeamLeader', 'Manager','Admin'] },
+      { name: 'Testing Reports', path: '/reports/testing', roles: ['Manager','Admin'] }
     ]
   },
 
@@ -84,10 +84,10 @@ export const menus = [
     name: 'Users',
     path: '/users',
     icon: Users,
-    roles: ['Manager'],
+    roles: ['Manager','Admin'],
     children:[
-      { name:'Create User', path:'/users/create',roles:['Manager'] },
-      { name:'Users List', path:'/users/list',roles:['Manager'] },
+      { name:'Create User', path:'/users/create',roles:['Manager','Admin'] },
+      { name:'Users List', path:'/users/list',roles:['Manager','Admin'] },
     ]
   },
 
@@ -95,9 +95,9 @@ export const menus = [
     name: 'Organization',
     path: '/organization',
     icon: Building,
-    roles: ['Manager'],
+    roles: ['Manager','Admin'],
     children: [
-      { name:'Organization Settings', path: '/organization/settings' ,roles: ['Manager'] }
+      { name:'Organization Profile', path: '/organization/profile' ,roles: ['Manager','Admin'] }
     ]
   },
 
@@ -105,13 +105,13 @@ export const menus = [
     name: 'Profile',
     path: '/profile',
     icon: User,
-    roles: ['Developer', 'TeamLeader', 'Manager', 'Tester']
+    roles: ['Developer', 'TeamLeader', 'Manager', 'Tester','Admin']
   }
 ];
 
 /* ===================== SIDEBAR ===================== */
 
-const Sidebar = ({ isOpen, role = "Developer" }) => {
+const Sidebar = ({ isOpen, role }) => {
   const [openMenu, setOpenMenu] = useState(null);
   const location = useLocation();
 

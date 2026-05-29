@@ -1,10 +1,38 @@
 import { createColumnHelper, flexRender, getCoreRowModel, getFilteredRowModel, useReactTable } from "@tanstack/react-table";
-import { BookOpenText, Bug, ChartColumnBig, CircleX, ClosedCaption, Equal, Eye, Info, Search, Timer, TimerOff, User } from "lucide-react";
-import { useState } from "react";
+import { BookOpenText, Bug, ChartColumnBig, CircleX, Equal, Eye, Info, Search, Timer, TimerOff, User } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import useTask from "../../hooks/useTask";
+import useAuth from "../../hooks/useAuth";
+import useMaster from "../../hooks/useMaster";
+import { formatDateTime } from "../../utils/dateUtils";
 
 const TaskList = () => {
+
+    const { getUserFromToken } = useAuth();
+    const [data, setData] = useState([]);
+    const { getTasks } = useTask();
+    
+    // Get lookup maps from useMaster
+    const { fetchDevelopersAndTestersAndOrg, developerMap, testerMap , organizationMap } = useMaster();
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const user = getUserFromToken();
+            const orgId = user.organizationId;
+
+            // Fetch developers & testers first (to build lookup maps)
+            await fetchDevelopersAndTestersAndOrg(orgId);
+            // Then fetch tasks
+            const response = await getTasks(Number(orgId));
+            console.log('tasks', response);
+            if (response?.success && response?.data) {
+                setData(response.data);
+            }
+        };
+
+        fetchData();
+    }, []);
 
     const columneHelper = createColumnHelper();
 
@@ -16,21 +44,21 @@ const TaskList = () => {
             cell:(info) => (
                 <>
                 <div className="flex gap-3">
-
                     <button type="button" title="View"
                         className="text-blue-600 hover-underline cursor-pointer"
-                        onClick={() => handleView(info) }
+                        onClick={() => handleView(info,"view") }
                     >
-                    <Eye size={16} />
+                        <Eye size={16} />
                     </button>
-
-                    <button type="button" title="Close Task"
-                        className="text-blue-600 hover-underline cursor-pointer"
-                        onClick={() => handleView(info) }
-                    >
-                    <CircleX color="#d82222" size={16} />
-                    </button>
-
+                    {/* Hide Close button if status is 'CLOSED' */}
+                    {info.row.original.status !== 'CLOSED' && (
+                        <button type="button" title="Close Task"
+                            className="text-blue-600 hover-underline cursor-pointer"
+                            onClick={() => handleView(info,"close") }
+                        >
+                            <CircleX color="#d82222" size={16} />
+                        </button>
+                    )}
                 </div>
                 </>
             ),
@@ -55,8 +83,8 @@ const TaskList = () => {
             )
         }),
 
-        columneHelper.accessor('developer',{
-            cell:(info) => info.getValue(),
+        columneHelper.accessor('developerId',{
+            cell:(info) => developerMap[info.getValue()] || "-",
             header:()=>(
                 <span className="flex items-center">
                     <Equal className="mr-2" size={16} /> Developer
@@ -64,8 +92,8 @@ const TaskList = () => {
             )
         }),
 
-        columneHelper.accessor('tester',{
-            cell:(info) => info.getValue(),
+        columneHelper.accessor('testerId',{
+            cell:(info) => testerMap[info.getValue()] || "-",
             header:() => (
                 <span className="flex items-center">
                     <Equal className="mr-2" size={16} /> Tester
@@ -73,8 +101,8 @@ const TaskList = () => {
             )
         }),
 
-        columneHelper.accessor('startdatetime',{
-            cell:(info) => info.getValue(),
+        columneHelper.accessor('startDateTime',{
+            cell:(info) => formatDateTime(info.getValue()),
             header: () => (
                 <span className="flex items-center">
                     <Timer className="mr-2" size={16} /> Start DateTime 
@@ -82,8 +110,8 @@ const TaskList = () => {
             )
         }),
 
-        columneHelper.accessor('duedatetime',{
-            cell:(info) => info.getValue(),
+        columneHelper.accessor('dueDateTime',{
+            cell:(info) => formatDateTime(info.getValue()),
             header: () => (
                 <span className="flex items-center">
                     <TimerOff className="mr-2" size={16} /> Due DateTime 
@@ -109,36 +137,48 @@ const TaskList = () => {
             )
         }),
 
-        columneHelper.accessor('unittesting',{
-            cell:(info)=> info.getValue(),
+        columneHelper.accessor('unitTestingStatus',{
+            cell:(info)=> info.getValue() || "-",
             header:() => (
                 <span className="flex items-center">
                     <Bug className="mr-2" size={16} /> Unit Testing 
                 </span>
             )
-        })
+        }),
+
+        columneHelper.accessor('createdAt',{
+            cell:(info) => formatDateTime(info.getValue()),
+            header: () => (
+                <span className="flex items-center">
+                    <Timer className="mr-2" size={16} /> Created At 
+                </span>
+            )
+        }),
+        
+        columneHelper.accessor('updatedAt',{
+            cell:(info) => formatDateTime(info.getValue()),
+            header: () => (
+                <span className="flex items-center">
+                    <Timer className="mr-2" size={16} /> Updated At 
+                </span>
+            )
+        }),
+
+        columneHelper.accessor('organizationId',{
+            cell:(info) => organizationMap[info.getValue()] || "-",
+            header:()=>(
+                <span className="flex items-center">
+                    <Equal className="mr-2" size={16} /> Organization
+                </span>
+            )
+        }),
     ]
 
     const navigate = useNavigate();
 
-    const handleView = (info) => {
-        navigate(`/tasks/create/${info.row.original.id}`)
+    const handleView = (info, action) => {
+        navigate(`/tasks/create/${info.row.original.id}/${action}`)
     }
-
-
-    const [data, setData] = useState([
-        {
-            id: 1,
-            title: "Login API",
-            developer: "Dhananjay",
-            tester: "Rahul",
-            startdatetime: "2026-05-01",
-            duedatetime: "2026-05-05",
-            priority: "High",
-            status: "In Progress",
-            unittesting: "Done"
-        }
-    ]);
 
     const [globalFilter,setGlobalFilter] = useState("");
 
@@ -158,7 +198,7 @@ const TaskList = () => {
     return (
         <div className="flex flex-col min-h-screen max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
 
-            <div className="mb-4 relative">    
+            <div className="mb-4 relative">
                 <input 
                     value={globalFilter}
                     onChange={(e)=> setGlobalFilter(e.target.value) }

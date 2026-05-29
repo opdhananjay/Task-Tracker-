@@ -1,0 +1,289 @@
+FUTURE MODULE FLOW – ISSUE MANAGEMENT (TESTER + SUPPORT COMBINED)
+
+(Current focus remains Task Tracker module.
+After completing task workflow this module will be developed.)
+
+---------------------------------------------------------
+WHY THIS MODULE?
+---------------------------------------------------------
+
+In many organizations:
+
+- QA/Testers find bugs
+- Support teams receive issues
+- Internal users report bugs
+- Feature requests come from clients
+
+Currently these issues are shared manually:
+
+- WhatsApp
+- Calls
+- Messages
+- Emails
+
+This creates:
+
+- No tracking
+- No issue history
+- No accountability
+- Missing bug records
+
+Solution:
+
+Build Issue Management Module
+
+---------------------------------------------------------
+IMPORTANT DECISION
+---------------------------------------------------------
+
+Tester and Support role will remain SAME role.
+
+Reason:
+
+Creating separate Support role adds:
+
+- New dashboard
+- New permissions
+- New APIs
+- More complexity
+
+For MVP:
+
+Tester role will handle:
+
+1. Issue Reporting
+2. Task Testing/Validation
+
+---------------------------------------------------------
+UPDATED ROLE FLOW
+---------------------------------------------------------
+
+Admin
+Manager
+TeamLeader
+Developer
+Tester
+
+---------------------------------------------------------
+TESTER RESPONSIBILITIES
+---------------------------------------------------------
+
+BEFORE TASK CREATION:
+
+Tester can:
+
+- Report bugs
+- Report issues
+- Report enhancement requests
+- Report feature requests
+
+---------------------------------------------------------
+
+AFTER TASK COMPLETION:
+
+Tester can:
+
+- Validate fixes
+- Approve task
+- Reject task
+
+---------------------------------------------------------
+ISSUE FLOW
+---------------------------------------------------------
+
+1. TESTER FINDS ISSUE
+
+Examples:
+
+- Login issue
+- Payment issue
+- API failure
+- UI bug
+- Performance issue
+- Feature request
+
+---------------------------------------------------------
+
+2. TESTER CREATES ISSUE
+
+Issue form fields:
+
+- Issue Title
+- Description
+- Issue Type
+    - Bug
+    - Enhancement
+    - Feature Request
+    - Support Issue
+- Priority
+- Screenshot/File (optional)
+- Reported By
+- OrganizationId
+- Status (Default: Open)
+
+---------------------------------------------------------
+
+3. ISSUE SAVED IN DATABASE
+
+Issue table stores:
+
+- Id
+- Title
+- Description
+- IssueType
+- Priority
+- ReportedBy
+- OrganizationId
+- Status
+- ScreenshotUrl
+- CreatedAt
+- UpdatedAt
+
+---------------------------------------------------------
+
+4. MANAGER / TEAM LEAD REVIEWS ISSUE
+
+Manager dashboard:
+
+- View Open Issues
+- Validate issue
+- Decide if task creation required
+
+---------------------------------------------------------
+
+5. CONVERT ISSUE TO TASK
+
+Manager/TL clicks:
+
+Convert To Task
+
+OR
+
+During Create Task:
+
+Select:
+
+Issue Found From
+
+Dropdown:
+
+Issue #101
+Issue #102
+Issue #103
+
+---------------------------------------------------------
+
+6. TASK CREATION
+
+Task gets created:
+
+- Title
+- Description
+- Developer
+- Tester
+- Priority
+- Due Date
+- Acceptance Criteria
+
+Task linked with:
+
+IssueId
+
+---------------------------------------------------------
+
+7. ISSUE STATUS UPDATE
+
+When task created:
+
+Open → Converted
+
+---------------------------------------------------------
+
+8. DEVELOPER WORKFLOW
+
+Developer receives task
+
+Status Flow:
+
+Not Started
+→ In Progress
+→ Dev Done
+
+---------------------------------------------------------
+
+9. TESTER VALIDATION
+
+Tester validates fix
+
+Testing
+→ Approved
+→ Completed
+
+OR
+
+Testing
+→ Rejected
+→ Back to Developer
+
+---------------------------------------------------------
+
+10. ISSUE CLOSURE
+
+After task completion:
+
+Converted → Closed
+
+---------------------------------------------------------
+TESTER DASHBOARD
+---------------------------------------------------------
+
+Create Issue
+My Reported Issues
+Testing Queue
+Approve/Reject Tasks
+
+---------------------------------------------------------
+MANAGER DASHBOARD
+---------------------------------------------------------
+
+View Issues
+Convert Issue To Task
+Reports
+
+---------------------------------------------------------
+DEVELOPER DASHBOARD
+---------------------------------------------------------
+
+My Tasks
+
+---------------------------------------------------------
+DATABASE UPDATE
+---------------------------------------------------------
+
+Create Issues Table
+
+Add:
+
+IssueId in Tasks table
+
+---------------------------------------------------------
+FINAL FLOW
+---------------------------------------------------------
+
+Tester finds issue
+→ Create Issue
+→ Manager reviews
+→ Convert to Task
+→ Developer fixes
+→ Tester validates
+→ Issue closes
+
+---------------------------------------------------------
+
+CURRENT FOCUS
+
+Complete Task Tracker Module first
+
+Then build:
+
+Issue Management Module

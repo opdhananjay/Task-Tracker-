@@ -4,6 +4,7 @@ import ManagerDashboard from "../components/dashboard/ManagerDashboard";
 import TeamLeadDashboard from "../components/dashboard/TeamLeadDashboard";
 import DeveloperDashboard from "../components/dashboard/DeveloperDashboard";
 import TesterDashboard from "../components/dashboard/TesterDashboard";
+import useAuth from "../hooks/useAuth";
 
 const DashboardPage = () => {
 
@@ -11,7 +12,9 @@ const DashboardPage = () => {
         toast.success('Welcome Dhananjay !');
     },[]);
 
-    const userRole = localStorage.getItem('role');
+    const { getUserFromToken } = useAuth();
+
+    const userRole = getUserFromToken().role;
 
     const renderDashboard = () => {
 

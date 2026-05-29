@@ -13,8 +13,9 @@ export const TASK_STATUS = {
     IN_PROGRESS: "IN_PROGRESS",
     DEV_DONE: "DEV_DONE",
     TESTING: "TESTING",
-    COMPLETED: "COMPLETED"
-};
+    COMPLETED: "COMPLETED",
+    CLOSED: "CLOSED"
+};  
 
 // FormName - Create Task 
 export const TASK_PRIORITY = {
@@ -38,3 +39,16 @@ export const USER_ROLES = {
     DEVELOPER: "Developer",
     TESTER: "Tester"
 };
+
+
+// 
+export const ORG_TYPES = [
+    "Software Development",
+    "Marketing",    
+    "Finance",
+    "Healthcare",
+    "Education",    
+    "Retail",
+    "Manufacturing",
+    "Non-Profit"
+];

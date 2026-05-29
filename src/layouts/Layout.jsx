@@ -3,16 +3,18 @@ import Footer from "./Footer";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 import { useState } from "react";
+import useAuth from "../hooks/useAuth";
 
 const Layout = () => {
 
+    const { getUserFromToken } = useAuth();
     const [isSidebarOpen,setIsSidebarOpen] = useState(false);
-
+    
     return (
         <div className="layout">
             <Header toggleSidebar={() => setIsSidebarOpen((prev) => !prev)} />
             <div className="main-layout">
-                <Sidebar isOpen={isSidebarOpen} />
+                <Sidebar isOpen={isSidebarOpen} role={getUserFromToken()?.role} />
                 <div className="content">
                     <Outlet/>
                 </div>

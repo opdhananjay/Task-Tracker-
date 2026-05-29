@@ -1,39 +1,181 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import DatePicker from "react-multi-date-picker";
 import TimePicker from "react-multi-date-picker/plugins/time_picker";
 import { TASK_PRIORITY, TASK_STATUS, TASK_TYPE } from "../../Enums/appEnums";
+import useAuth from "../../hooks/useAuth";
+import useTask from "../../hooks/useTask";
+import useMaster from "../../hooks/useMaster";
+import { formatDateTime } from "../../utils/dateUtils";
+import { useNavigate } from "react-router-dom";
 
-const CreateTask = () => {
+const CreateTask = ({ taskId, action }) => {
 
-    useEffect(()=>{
-        toast.success('Create your Task');
-    },[]);
+    console.log("Received Props:", { taskId, action });
+
+    // const [developers, setDevelopers] = useState([]);
+    // const [testers, setTesters] = useState([]);
 
     const { register,control, handleSubmit, formState:{errors,isValid}, reset} = useForm();
 
-    const onSubmit = (data) => {
+    const { createTaks, updateTaks, getTaskById, error: taskError } = useTask();
 
-        console.log('data',data);
+    const { getUserFromToken } = useAuth();
 
-        var js = {
-            "id": 0,
-            "title": "string",
-            "description": "string",
-            "taskType": "string",
-            "developerId": 0,
-            "testerId": 0,
-            "createdBy": 0,
-            "startDateTime": "2026-05-10T17:06:56.476Z",
-            "dueDateTime": "2026-05-10T17:06:56.476Z",
-            "priority": "string",
-            "status": "string",
-            "unitTestingStatus": "string",
-            "acceptanceCriteria": "string"
+    const { fetchDevelopersAndTestersAndOrg, developers, testers, error: masterError } = useMaster();
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+
+        if(!taskId){
+            console.log("Edit/View mode for taskId:", taskId, "with action:", action);
+            reset({
+                title: '',
+                description: '',
+                taskType: '',
+                assignedTo: '',
+                testerId: '',
+                startDateTime: null,
+                dueDateTime: null,
+                priority: '',
+                status: '',
+                unitTestingStatus: '',
+                acceptanceCriteria: ''
+            }); // Clear form for create mode
+            return;
         }
 
-    }
+        const fetchUsers = async () => {
+            
+            const orgId = getUserFromToken()?.organizationId;
+
+            await fetchDevelopersAndTestersAndOrg(orgId);
+
+            if (taskId) {
+
+                const response = await getTaskById(taskId);
+
+                if (response?.success && response?.data) {
+
+                    const data = response.data[0];
+
+                    const taksData = {
+                        ...data,
+                        assignedTo:data.developerId
+                    }
+
+                    reset(taksData);
+                }
+            }
+        };
+
+        fetchUsers();
+
+    }, [taskId,action]);
+
+    const getDateValue = (val) => {
+        // If it's a custom picker object with .toDate(), use it
+        if (val && typeof val.toDate === "function") {
+            return val.toDate().toISOString();
+        }
+        // If it's a JS Date object, use it directly
+        if (val instanceof Date) {
+            return val.toISOString();
+        }
+        // If it's already a string, return as is (or handle as needed)
+        return val || null;
+    };
+
+    const onSubmit = async (data) => {
+
+        console.log("Form Data:", data);
+
+        const getUserFromTokenData = getUserFromToken();
+
+        const payload = {
+
+            id: taskId ? Number(taskId) : null, // for update only
+
+            title: data.title,
+
+            description: data.description,
+
+            taskType: data.taskType,
+
+            developerId: Number(data.assignedTo), 
+            // assignedTo → developerId
+
+            testerId: data.testerId
+                ? Number(data.testerId)
+                : null,
+
+            createdBy: Number(getUserFromTokenData.userId), 
+            // logged in user id
+
+            startDateTime: getDateValue(data.startDateTime),
+
+            dueDateTime: getDateValue(data.dueDateTime),
+
+            priority: data.priority,
+
+            status: data.status,
+
+            unitTestingStatus: data.unitTestingStatus, // field mapping
+
+            acceptanceCriteria: data.acceptanceCriteria,
+
+            OrganizationId:Number(getUserFromTokenData.organizationId)
+            // from user context
+        };
+
+        console.log("Final Payload:", payload);
+
+        if (taskId) {
+            // update API
+            
+            const res = await updateTaks(payload);
+
+            if(!res){
+                toast.error(taskError || "Failed to update task");
+                return;
+            }
+
+            if(res.success && res.statusCode === 200){
+                
+                toast.success(res.message || "Task updated successfully");
+
+                navigate("/tasks/all");
+            }
+            else{
+                toast.error(res.message || "Failed to update task");
+            }
+
+        }
+        else {
+            // create API
+
+            const res = await createTaks(payload);
+
+            if(!res){
+                toast.error(taskError || "Failed to create task");
+                return;
+            }
+
+            if(res.success && res.statusCode === 200){
+                
+                toast.success(res.message || "Task created successfully");
+
+                reset();
+
+                navigate("/tasks/all");
+            }
+            else{
+                toast.error(res.message || "Failed to create task");
+            }
+        }
+    };
 
     return (
         <>
@@ -90,7 +232,7 @@ const CreateTask = () => {
                                     </p>
                                     )}
                                 </div>
-                                </div>
+                            </div>
 
                         </div>
 
@@ -126,9 +268,9 @@ const CreateTask = () => {
                                 Select Developer
                                 </option>
 
-                                <option value="1">Dhananjay</option>
-                                <option value="2">Rahul</option>
-                                <option value="3">Amit</option>
+                                {developers.map((dev) => (
+                                    <option key={dev.id} value={dev.id}>{dev.name}</option>
+                                ))}
                             </select>
 
                             {errors.assignedTo && (
@@ -156,9 +298,9 @@ const CreateTask = () => {
                                 Select Tester
                                 </option>
 
-                                <option value="4">Neha</option>
-                                <option value="5">Priya</option>
-                                <option value="6">Karan</option>
+                                {testers.map((tester) => (
+                                    <option key={tester.id} value={tester.id}>{tester.name}</option>
+                                ))}
                             </select>
                             </div>
                         </div>
@@ -179,8 +321,8 @@ const CreateTask = () => {
                                             <DatePicker
                                                 plugins={[<TimePicker position="bottom" />]}
                                                 value={field.value}
-                                                onChange={(date)=>field.onChange(date?.toDate())}
-                                                format="YYYY-MM-DD HH:mm:ss"
+                                                onChange={(date)=>field.onChange(date)}
+                                                format="DD/MM/YYYY hh:mm A"
                                                 className="w-full"
                                                 inputClass="w-full px-3 py-2 border rounded-md"
                                                 editable={false}
@@ -201,8 +343,8 @@ const CreateTask = () => {
                                             <DatePicker
                                                 plugins={[<TimePicker position="bottom" />]}
                                                 value={field.value}
-                                                onChange={(date)=>field.onChange(date?.toDate())}
-                                                format="YYYY-MM-DD HH:mm:ss"
+                                                onChange={(date)=>field.onChange(date)}
+                                                format="DD/MM/YYYY hh:mm A"
                                                 className="w-full"
                                                 inputClass="w-full px-3 py-2 border rounded-md"
                                                 editable={false}
@@ -308,7 +450,7 @@ const CreateTask = () => {
                                     {/* Yes */}
                                     <label className="flex items-center cursor-pointer gap-2 leading-none">
                                         <input type="radio" className="mt-[1px] text-green-600 focus:ring-green-500"
-                                        {...register('requiredUnitTesting')}
+                                        {...register('unitTestingStatus')}
                                         value="YES"
                                         />
                                         <span className="text-sm text-gray-700">Yes</span>
@@ -317,7 +459,7 @@ const CreateTask = () => {
                                     {/* No */}
                                     <label className="flex items-center cursor-pointer gap-2 leading-none">
                                         <input type="radio" className="mt-[1px] text-green-600 focus:ring-green-500"
-                                        {...register('requiredUnitTesting')}
+                                        {...register('unitTestingStatus')}
                                         value="NO"
                                         />
                                         <span className="text-sm text-gray-700">No</span>
@@ -346,7 +488,9 @@ const CreateTask = () => {
 
 
                         <div className="flex justify-end mt-5">
-                            <button className="bg-gray-700 rounded-md px-4 py-2 text-white text-md cursor-pointer" >Create Task</button>
+                            <button className="bg-gray-700 rounded-md px-4 py-2 text-white text-md cursor-pointer" >
+                                {(taskId && action == 'view') ? "Update Task" : (taskId && action == 'close') ? "Close Task" : "Create Task"}
+                            </button>
                         </div>
 
                                         
