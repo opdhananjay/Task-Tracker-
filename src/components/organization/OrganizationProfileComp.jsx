@@ -72,7 +72,7 @@ const OrganizationProfileComp = () => {
             }
             else{
                 toast.error(res.message || "Failed to update organization");
-            }
+            }   
 
         }
         else{
@@ -101,11 +101,10 @@ const OrganizationProfileComp = () => {
                     // Optionally, you can also update the token or user context here to reflect the new organization   
                     toast.success('Kindly re-login to access organization features');
                     
-                    removeToken(); // Clear token to force re-login and refresh user context with new organization data
-
                     setTimeout(() => {
+                       removeToken(); // Clear token to force re-login and refresh user context with new organization data
                        navigate('/');   
-                    }, 4000);              
+                    }, 3000);              
                 }
                 else{
                     toast.error(updateOrgRes.message || "Failed to update user's organization");

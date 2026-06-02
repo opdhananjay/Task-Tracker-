@@ -9,6 +9,7 @@ import CreateUserPage from "../pages/Users/CreateUserPAge";
 import UsersListPage from "../pages/Users/UsersListPage";
 import OragnizationProfilePage from "../pages/Organization/OragnizationProfilePage";
 import RegistrationPage from "../pages/Auth/RegistrationPage";
+import MyTasksPage from "../pages/Development/MyTasksPage";
 
 const AppRoutes = () => {
     return (
@@ -33,6 +34,11 @@ const AppRoutes = () => {
 
                     <Route path="organization">
                         <Route path="profile" element={<OragnizationProfilePage/>} />
+                    </Route>
+
+                    <Route path="development" >
+                        <Route path="mytasks" element={<MyTasksPage/>} />
+                        
                     </Route>
 
                 </Route>

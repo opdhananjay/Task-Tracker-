@@ -41,8 +41,8 @@ const DashboardPage = () => {
 
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center">
-            <small>Different Role Different Dashboard Component Will Load in This Page </small> 
+        <div className="min-h-screen ">
+            {/* <small>Different Role Different Dashboard Component Will Load in This Page </small>  flex flex-col items-center justify-center */}
             {renderDashboard()}
         </div>
     )
