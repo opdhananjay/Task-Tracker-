@@ -52,3 +52,26 @@ export const ORG_TYPES = [
     "Manufacturing",
     "Non-Profit"
 ];
+
+
+export const ROLES = [
+    "Admin",
+    "Manager",
+    "TeamLead",
+    "Developer",
+    "Tester"
+]
+
+
+export const DepartmentTypes = [
+    "Engineering",
+    "Marketing",
+    "Finance",  
+    "HR",
+    "Sales",
+    "Support",
+    "Operations",
+    "IT",,
+    "Management",
+    "Other"
+];

@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { CreateOrganizationService, GetOrganizationService, UpdateOrganizationService, UpdateUserOrganizationService } from "../services/userService";
+import { CreateOrganizationService, CreateUserService, GetOrganizationService, GetUserService, GetUsersListService, UpdateOrganizationService, UpdateUserOrganizationService, UpdateUserService } from "../services/userService";
 import { LoaderContext } from "../context/LoaderProvider";
 
 const useUsers = () => {
@@ -14,13 +14,75 @@ const useUsers = () => {
 
     const [error,setError] = useState(null);
 
-    const createUser = async () => {
-
+    const createUser = async (payload) => {
+        try{
+            setLoading(true);
+            setError(null);
+            // call api to create user
+            const response = await CreateUserService(payload);
+            return response.data;
+        }
+        catch(err){
+            console.error(err);
+            setError(err.response?.data?.message || "Failed to create user");
+        }
+        finally{
+            setLoading(false);
+        }
     }
 
-    const getUsers = async () => {
-        
+    const updateUser = async (payload) => {
+        try{
+            setLoading(true);
+            setError(null);
+            // call api to update user
+            const response = await UpdateUserService(payload);
+            return response.data;
+        }
+        catch(err){
+            console.error(err);
+            setError(err.response?.data?.message || "Failed to update user");
+        }
+        finally{
+            setLoading(false);
+        }
     }
+
+
+    const getUserProfile = async (userId) => {
+        try{
+            setLoading(true);
+            setError(null);
+            const response = await GetUserService(userId);
+            return response.data;
+        }
+        catch(err){
+            console.error(err);
+            setError(err.response?.data?.message || "Failed to fetch user profile");
+            return null;
+        }
+        finally{
+            setLoading(false);
+        }
+    }
+
+    const getUsersListByOrgId = async (orgId) => {
+        try{
+            setLoading(true);
+            setError(null);
+            const response = await GetUsersListService(orgId);
+            return response.data;
+        }
+        catch(err){
+            console.error(err);
+            setError(err.response?.data?.message || "Failed to fetch users list");
+            return null;
+        }
+        finally{
+            setLoading(false);
+        }
+    }
+
 
     const getOrganization = async (orgId) => {
         try{
@@ -91,8 +153,7 @@ const useUsers = () => {
     }
 
 
-
-    return {createUser,getUsers, getOrganization, createOrganization, updateOrganization,updateUserOrg, error};
+    return {createUser, updateUser, getUserProfile, getUsersListByOrgId, getOrganization, createOrganization, updateOrganization,updateUserOrg, error};
 }
 
 export default useUsers;

@@ -44,12 +44,13 @@ const CreateTask = ({ taskId, action }) => {
                 unitTestingStatus: '',
                 acceptanceCriteria: ''
             }); // Clear form for create mode
-            return;
         }
 
         const fetchUsers = async () => {
             
             const orgId = getUserFromToken()?.organizationId;
+
+            console.log("Fetching developers and testers for organizationId:", orgId);
 
             await fetchDevelopersAndTestersAndOrg(orgId);
 
@@ -73,7 +74,7 @@ const CreateTask = ({ taskId, action }) => {
 
         fetchUsers();
 
-    }, [taskId,action]);
+    }, [taskId]);
 
     const getDateValue = (val) => {
         // If it's a custom picker object with .toDate(), use it

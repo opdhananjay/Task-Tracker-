@@ -46,7 +46,7 @@ const OrganizationProfileComp = () => {
 
     const  { getOrganization , createOrganization, updateOrganization, updateUserOrg, error } = useUsers();
 
-    const { getUserFromToken } = useAuth();
+    const { getUserFromToken , removeToken } = useAuth();
 
     const navigate = useNavigate();
 
@@ -99,7 +99,13 @@ const OrganizationProfileComp = () => {
                 if(updateOrgRes?.success){
                     toast.success(updateOrgRes.message || "User's organization updated successfully");
                     // Optionally, you can also update the token or user context here to reflect the new organization   
-                    navigate('/');            
+                    toast.success('Kindly re-login to access organization features');
+                    
+                    removeToken(); // Clear token to force re-login and refresh user context with new organization data
+
+                    setTimeout(() => {
+                       navigate('/');   
+                    }, 4000);              
                 }
                 else{
                     toast.error(updateOrgRes.message || "Failed to update user's organization");
@@ -232,7 +238,7 @@ const OrganizationProfileComp = () => {
 
                             {
                                 getUserFromToken().organizationId && (
-                                    <button className="bg-green-500 text-white px-4 py-2 rounded" onClick={() => navigate("/users/create")}>
+                                    <button type="button" className="bg-green-500 text-white px-4 py-2 rounded" onClick={() => navigate("/users/create")}>
                                         Create Users
                                     </button>
                                 )

@@ -177,7 +177,7 @@ const TaskList = () => {
     const navigate = useNavigate();
 
     const handleView = (info, action) => {
-        navigate(`/tasks/create/${info.row.original.id}/${action}`)
+        navigate(`/users/create/${info.row.original.id}/${action}`)
     }
 
     const [globalFilter,setGlobalFilter] = useState("");

@@ -15,3 +15,19 @@ export const UpdateOrganizationService = (dataToSend) => {
 export const UpdateUserOrganizationService = (payload) => {
     return axiosInstance.post('/Tracker/UpdateUserOrganization',payload);
 }
+
+export const CreateUserService = (payload) => {
+    return axiosInstance.post('/Auth/Registration',payload); 
+}
+
+export const UpdateUserService = (payload) => {
+    return axiosInstance.put('/Auth/UpdateUser',payload);
+}
+
+export const GetUserService = (userId) => {
+    return axiosInstance.get(`/Auth/GetUserProfile/${userId}`);
+}
+
+export const GetUsersListService = (orgId) => {
+    return axiosInstance.get(`/Auth/GetUsers?OrgId=${orgId}`);
+}

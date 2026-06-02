@@ -8,6 +8,7 @@ import TaskListPage from "../pages/Tasks/TaskListPage";
 import CreateUserPage from "../pages/Users/CreateUserPAge";
 import UsersListPage from "../pages/Users/UsersListPage";
 import OragnizationProfilePage from "../pages/Organization/OragnizationProfilePage";
+import RegistrationPage from "../pages/Auth/RegistrationPage";
 
 const AppRoutes = () => {
     return (
@@ -15,6 +16,7 @@ const AppRoutes = () => {
             <Toaster/>
             <Routes>
                 <Route path="/" element={<Login/>} />
+                <Route path="/register" element={<RegistrationPage/>} />
                 <Route element={<Layout/>}>
                     
                     <Route path="/dashboard" element={<DashboardPage/>} />
@@ -25,7 +27,7 @@ const AppRoutes = () => {
                     </Route>
 
                     <Route path="users">
-                        <Route path="create" element={<CreateUserPage/>}  />
+                        <Route path="create/:userId?/:action?" element={<CreateUserPage/>}  />
                         <Route path="list" element={<UsersListPage/>} />
                     </Route>
 

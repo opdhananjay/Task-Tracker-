@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 
 const LoginPage = () => {
 
-  const { login,logout, setToken, getToken, removeToken, error } = useAuth();
+  const { login,logout, setToken, getToken, removeToken, getUserFromToken, error } = useAuth();
   
   const navigate = useNavigate();
   
@@ -47,7 +47,15 @@ const LoginPage = () => {
 
         setToken(response.data.token);
 
-        navigate('/dashboard');
+        const user = getUserFromToken();
+
+        if(user?.organizationId){
+            navigate('/dashboard');
+        }
+        else{
+          //  toast.success("No organization associated with this account. Please create an organization profile.");
+           navigate('/organization/profile');
+        }
     }
     else{
         toast.error(response.message || error || 'Failed to Login');
@@ -124,6 +132,10 @@ const LoginPage = () => {
           <button className="bg-green-600 text-white py-2 rounded-md hover:bg-green-700 transition">
             Sign In
           </button>
+
+          <span className="text-sm text-gray-500 mt-2 text-center">
+            Don't have an account? <a href="/register" className="text-green-600 hover:underline">Create a new account</a>
+          </span> 
 
         </form>
 

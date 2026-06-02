@@ -18,6 +18,19 @@ Purpose:Admin should be able to create team members.
 •   Phone Number,
 •   Employee ID
 
+{
+  "firstName": "string",
+  "lastName": "string",
+  "email": "string",
+  "password": "string",
+  "role": "string",
+  "department": "string",
+  "phoneNumber": "string",
+  "employeeId": "string",
+  "viaOrganization": true,
+  "organizationId": 0
+}
+
 Buttons
     Create User
 
