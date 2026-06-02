@@ -18,25 +18,27 @@ const DashboardPage = () => {
 
     const renderDashboard = () => {
 
-        if(userRole == 'Manager'){
-             return <ManagerDashboard />
-        }
+        // if(userRole == 'Manager'){
+        //      return <ManagerDashboard />
+        // }
 
-        if(userRole == 'TeamLeader'){
-             return <TeamLeadDashboard />
-        }
+        // if(userRole == 'TeamLeader'){
+        //      return <TeamLeadDashboard />
+        // }
 
-        if(userRole == 'Developer'){
-             return <DeveloperDashboard />
-        }
+        // if(userRole == 'Developer'){
+        //      return <DeveloperDashboard />
+        // }
 
-        if(userRole == 'Tester'){
-            return <TesterDashboard />
-        }
+        // if(userRole == 'Tester'){
+        //     return <TesterDashboard />
+        // }
 
-        return (<div>
-            No Dashboard founds
-        </div>);
+        return <DeveloperDashboard />
+
+        // return (<div>
+        //     No Dashboard founds
+        // </div>);
     }
 
 
