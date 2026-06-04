@@ -1,0 +1,11 @@
+
+TaskStatusHistory Table - 
+
+Id
+TaskId
+PreviousStatus
+NewStatus
+Remarks
+ChangedBy
+CreatedAtUtc
+

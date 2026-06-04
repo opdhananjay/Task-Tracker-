@@ -412,8 +412,10 @@ const CreateTask = ({ taskId, action }) => {
 
                                     {
                                         Object.values(TASK_STATUS).map((status)=>(
-                                            <option key={status} value={status}>
-                                                {status.replaceAll("_"," ")}
+                                            <option className={`px-2 py-1 rounded ${status.color}`} key={status.label} value={status.value}>
+                                               <span className={`px-2 py-1 rounded ${status.color}`}>
+                                                {status.label}
+                                                </span>
                                             </option>
                                         ))
                                     }

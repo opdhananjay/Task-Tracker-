@@ -31,3 +31,10 @@ export const GetUserService = (userId) => {
 export const GetUsersListService = (orgId) => {
     return axiosInstance.get(`/Auth/GetUsers?OrgId=${orgId}`);
 }
+
+
+// Get Developer Taks 
+export const GetDeveloperOrgTaskLstService = (payload) => {
+    return axiosInstance.post('/Tracker/GetOrgDevTasksLst',payload);
+}
+

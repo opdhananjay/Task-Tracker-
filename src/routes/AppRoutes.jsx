@@ -10,6 +10,7 @@ import UsersListPage from "../pages/Users/UsersListPage";
 import OragnizationProfilePage from "../pages/Organization/OragnizationProfilePage";
 import RegistrationPage from "../pages/Auth/RegistrationPage";
 import MyTasksPage from "../pages/Development/MyTasksPage";
+import TaskDetails from "../components/developement/TaskDetails";
 
 const AppRoutes = () => {
     return (
@@ -38,7 +39,7 @@ const AppRoutes = () => {
 
                     <Route path="development" >
                         <Route path="mytasks" element={<MyTasksPage/>} />
-                        
+                        <Route path="taskdetails/:taskId?/:action?" element={<TaskDetails/>} />
                     </Route>
 
                 </Route>

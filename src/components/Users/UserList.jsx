@@ -167,6 +167,9 @@ const UserList = () => {
     const table = useReactTable({
         data,
         columns,
+        state:{
+            globalFilter
+        },
         onGlobalFilterChange:setGlobalFilter,
         getCoreRowModel:getCoreRowModel(),
         getFilteredRowModel:getFilteredRowModel(),
