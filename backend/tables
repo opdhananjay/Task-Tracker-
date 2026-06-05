@@ -9,3 +9,27 @@ Remarks
 ChangedBy
 CreatedAtUtc
 
+
+TaskTestCases
+
+Id
+TaskId
+
+TestCaseTitle
+ExpectedResult
+
+DeveloperActualResult
+DeveloperStatus
+
+TesterActualResult
+TesterStatus
+
+TesterRemarks
+
+CreatedBy
+CreatedAtUtc
+
+UpdatedBy
+UpdatedAtUtc
+
+

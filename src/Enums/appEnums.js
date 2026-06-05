@@ -122,3 +122,10 @@ export const DepartmentTypes = [
     "Management",
     "Other"
 ];
+
+
+export const TEST_CASE_STATUS = {
+    NOT_EXECUTED: "NOT_EXECUTED",
+    PASSED: "PASSED",
+    FAILED: "FAILED"
+};

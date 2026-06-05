@@ -2,6 +2,8 @@ import { ArrowLeft, BadgeCheckIcon, CalendarClock, Code, Edit, EllipsisVertical,
 import { useParams } from "react-router-dom";
 import Modal from "../shared/Modal";
 import { useState } from "react";
+import TestCases from "./TestCases";
+import { TASK_STATUS } from "../../Enums/appEnums";
 
 const TaskDetails = () => {
 
@@ -9,20 +11,26 @@ const TaskDetails = () => {
 
     console.log("TaskDetails Route Params:", { action, taskId });
 
-    const [testCases,setTestCases] = useState(true);
+    const [testCases,setTestCases] = useState(false);
+
+    const [overAllTaskStatus, setOverAllTaskStatus] = useState(TASK_STATUS["TESTING_FAILED"]);
+
+    const handleTestCasesBtn = () => {
+        setTestCases(true);
+    }
 
     return (
         <>
 
         <Modal
-        isOpen={testCases}
-        onClose={() => setTestCases(false)}
-        title="Task Details"
-        >
-            <div className="w-full p-4">
-                <p>Task details content goes here...</p>
-            </div>
+            isOpen={testCases}
+            onClose={() => setTestCases(false)}
+            title={`Test Cases for Task - ${taskId}`}
+            width="max-w-4xl"
+            >
+            <TestCases />
         </Modal>
+       
 
         <div className="w-full px-4 bg-gray-50">
 
@@ -79,6 +87,11 @@ const TaskDetails = () => {
                     
                     <div className="">
                         <span className="flex items-center gap-2 text-sm text-gray-500 bg-gray-100 text-gray-600 rounded-sm px-2 py-1 w-fit font-semibold"> <CalendarClock size={16} />  Due : 2024-07-15</span>
+                    </div>
+
+
+                    <div className={``}>
+                        <span className={`flex items-center gap-2 text-sm text-gray-500 text-gray-600 rounded-sm px-2 py-1 w-fit font-semibold ${overAllTaskStatus.color}`}> Status : {overAllTaskStatus.label} </span>
                     </div>
 
                 </div>
@@ -351,8 +364,8 @@ const TaskDetails = () => {
                         </button>
 
 
-                        <button type="button" className="flex items-center gap-1 bg-blue-600  text-sm text-white rounded-sm px-3 py-2 border border-blue-300 hover:bg-white-100 ml-2">
-                            <ShieldCheck size={16} /> Write Test Cases
+                        <button onClick={handleTestCasesBtn} type="button" className="flex items-center gap-1 bg-blue-600  text-sm text-white rounded-sm px-3 py-2 border border-blue-300 hover:bg-white-100 ml-2">
+                            <ShieldCheck size={16} /> Test Cases
                         </button>
 
                     </div>
