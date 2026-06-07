@@ -33,6 +33,12 @@ export const TASK_STATUS = {
     color: "bg-purple-100 text-purple-700",
   },
 
+  TESTING_QUEUED: {
+    value: "TESTING_QUEUED",
+    label: "Testing Queued",
+    color: "bg-yellow-100 text-yellow-700",
+  },
+
   TESTING_IN_PROGRESS: {
     value: "TESTING_IN_PROGRESS",
     label: "Testing In Progress",
@@ -44,13 +50,7 @@ export const TASK_STATUS = {
     label: "Testing Failed",
     color: "bg-red-100 text-red-700",
   },
-
-  TESTING_INCOMPLETE: {
-    value: "TESTING_INCOMPLETE",
-    label: "Testing Incomplete",
-    color: "bg-orange-100 text-orange-700",
-  },
-
+  
   TESTING_COMPLETED: {
     value: "TESTING_COMPLETED",
     label: "Testing Completed",

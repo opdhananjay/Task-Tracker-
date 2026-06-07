@@ -1,0 +1,47 @@
+NOT_STARTED
+↓
+IN_PROGRESS
+↓
+DEVELOPMENT_STOPPED
+↓
+IN_PROGRESS
+↓
+DEV_DONE
+↓
+TESTING_QUEUE
+↓
+TESTING_IN_PROGRESS
+↓
+TESTING_FAILED
+↓
+IN_PROGRESS
+↓
+DEV_DONE
+↓
+TESTING_QUEUE
+↓
+TESTING_IN_PROGRESS
+↓
+TESTING_COMPLETED
+↓
+CLOSED
+
+
+
+update status button 
+
+dev stopeed
+closed 
+
+
+
+1. bind task details 
+2. work on save progress 
+4. work on task status section 
+3. work on start task 
+5. work on update task 
+6. work on ready for Testing
+7. reopen 
+8. dev done 
+
+

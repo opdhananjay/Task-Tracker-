@@ -39,7 +39,7 @@ const AppRoutes = () => {
 
                     <Route path="development" >
                         <Route path="mytasks" element={<MyTasksPage/>} />
-                        <Route path="taskdetails/:taskId?/:action?" element={<TaskDetails/>} />
+                        <Route path="taskdetails/:organizationId/:taskId/:action?" element={<TaskDetails/>} />
                     </Route>
 
                 </Route>

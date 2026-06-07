@@ -1,36 +1,122 @@
 import { ArrowLeft, BadgeCheckIcon, CalendarClock, Code, Edit, EllipsisVertical, FolderDot, Info, Logs, MessageCircle, Play, ShieldAlert, ShieldCheck, SkipBack, TestTube, User } from "lucide-react";
 import { useParams } from "react-router-dom";
 import Modal from "../shared/Modal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TestCases from "./TestCases";
 import { TASK_STATUS } from "../../Enums/appEnums";
+import { Controller, useForm } from "react-hook-form";
+import DatePicker from "react-multi-date-picker";
+import TimePicker from "react-multi-date-picker/plugins/time_picker";
+import ConfirmationModal from "../shared/ConfirmationModal";
+import useDeveloper from "../../hooks/useDeveloper";
+import toast from "react-hot-toast";
+import { formatDateTime } from "../../utils/dateUtils";
+import useMaster from "../../hooks/useMaster";
 
 const TaskDetails = () => {
 
-    const { action,taskId } = useParams();
+    const { organizationId, action, taskId } = useParams();
 
-    console.log("TaskDetails Route Params:", { action, taskId });
+    const { GetTaskDetails } = useDeveloper();
 
-    const [testCases,setTestCases] = useState(false);
+    const { fetchDevelopersAndTestersAndOrg,developerMap,testerMap,organizationMap,userMap } = useMaster();
+
+    console.log("TaskDetails Route Params:", { organizationId, action, taskId });
+
+    const [openTestCases,setOpenTestCases] = useState(false);
 
     const [overAllTaskStatus, setOverAllTaskStatus] = useState(TASK_STATUS["TESTING_FAILED"]);
 
+    const { control } = useForm();
+
+    const [startTaskConfirm, setStartTaskConfirm] = useState(false);
+
+    const [markReadyConfirm, setMarkReadyConfirm] = useState(false);
+
+
+    const [taskDetails, setTaskDetails] = useState(null);
+
+    const [comments, setComments] = useState([]);
+
+    const [testCases, setTestCases] = useState([]);
+
+    const [statusHistory, setStatusHistory] = useState([]);
+
+   useEffect(() => {
+        
+        if(taskId){
+            // Fetch task details using taskId
+            console.log("Fetch details for taskId:", taskId);
+
+            
+
+            
+
+            const fetchTaskDetails = async () => {
+                const response = await GetTaskDetails(taskId);
+                if(response?.success && response?.data){
+                    console.log("Task details fetched successfully:", response.data);
+                    // You can set the task details in state here to display in the UI
+                    setTaskDetails(response.data[0]);
+                    setOverAllTaskStatus(TASK_STATUS[response.data[0].status] || '-');
+                }
+                else{
+                    toast.error(response?.message || "Failed to fetch task details");
+                }
+            }
+
+            fetchDevelopersAndTestersAndOrg(organizationId); 
+            fetchTaskDetails();
+        }
+        
+    },[taskId])
+
     const handleTestCasesBtn = () => {
-        setTestCases(true);
+        setOpenTestCases(true);
     }
+
+    const handleStartTaskConfirm = () => {
+        console.log("Task started");
+        setStartTaskConfirm(false);
+    };
+
+    const handleMarkReadyConfirm = () => {
+        console.log("Task marked as ready for testing");
+        setMarkReadyConfirm(false);
+    };
+
 
     return (
         <>
 
         <Modal
-            isOpen={testCases}
-            onClose={() => setTestCases(false)}
+            isOpen={openTestCases}
+            onClose={() => setOpenTestCases(false)}
             title={`Test Cases for Task - ${taskId}`}
             width="max-w-4xl"
             >
             <TestCases />
         </Modal>
        
+        <ConfirmationModal
+            isOpen={startTaskConfirm}
+            title="Start Task?"
+            description="Are you sure you want to start this task? You can update the status and add development notes."
+            confirmText="Yes, Start Task"
+            cancelText="No, Cancel"
+            onConfirm={handleStartTaskConfirm}
+            onCancel={() => setStartTaskConfirm(false)}
+        />
+
+        <ConfirmationModal
+            isOpen={markReadyConfirm}
+            title="Confirm Action"
+            description="Are you sure you want to mark this task as Ready for Testing? This action cannot be undone."
+            confirmText="Yes, Mark as Ready"
+            cancelText="No, Keep in Progress"
+            onConfirm={handleMarkReadyConfirm}
+            onCancel={() => setMarkReadyConfirm(false)}
+        />
 
         <div className="w-full px-4 bg-gray-50">
 
@@ -55,18 +141,18 @@ const TaskDetails = () => {
           <div className="flex flex-col justify-center gap-2 p-4 bg-white rounded-sm shadow-sm">
                 <div>
                     <span className="text-sm font-bold flex items-center gap-1 bg-blue-100 text-blue-600 rounded-sm px-2 py-1 w-fit">
-                    Task - 1024
+                    Task - {taskId}
                     </span>
                 </div>
 
                 <div className="flex justify-between items-center gap-2">
 
                     <div className="flex items-center gap-2">
-                        <span className="font-semibold">Implement User Authentication API</span>
+                        <span className="font-semibold">{taskDetails?.title || "Task Title"}</span>
                     </div>
 
                     <div className="flex items-center gap-2">
-                        <button type="button" className="flex items-center gap-1 bg-white-600  text-sm rounded-sm px-3 py-2 border border-gray-300 hover:bg-gray-100">
+                        <button type="button" onClick={() => setStartTaskConfirm(true)} className="flex items-center gap-1 bg-white-600  text-sm rounded-sm px-3 py-2 border border-gray-300 hover:bg-gray-100">
                             <Play size={16} />  Start Task
                         </button>
 
@@ -81,12 +167,12 @@ const TaskDetails = () => {
 
                     <div className="">
                         <span className="text-sm text-gray-500 bg-gray-100 text-red-600 rounded-sm px-2 py-1 w-fit font-semibold">
-                            High
+                            {taskDetails?.priority || '-'}
                         </span>
                     </div>
                     
                     <div className="">
-                        <span className="flex items-center gap-2 text-sm text-gray-500 bg-gray-100 text-gray-600 rounded-sm px-2 py-1 w-fit font-semibold"> <CalendarClock size={16} />  Due : 2024-07-15</span>
+                        <span className="flex items-center gap-2 text-sm text-gray-500 bg-gray-100 text-gray-600 rounded-sm px-2 py-1 w-fit font-semibold"> <CalendarClock size={16} />  Due : {formatDateTime(taskDetails?.dueDateTime) || '-'}</span>
                     </div>
 
 
@@ -104,14 +190,15 @@ const TaskDetails = () => {
                     <div className="flex flex-col gap-2 text-sm mb-2">
                         <h4 className="font-bold">Task Description</h4>
                         <p className="text-sm text-gray-600 mt-2">
-                        Implement a secure user authentication API using JWT tokens. The API should support user registration, login, and token refresh functionality. Ensure that passwords are hashed and that the API follows best practices for security and performance.
+                        {taskDetails?.description || "-"}
                         </p>
                     </div>
 
                     <div className="flex flex-col gap-2 text-sm">
                         <h4 className="font-bold ">Acceptance Criteria</h4>
                         <p className="text-sm text-gray-600 mt-2">
-                        Implement a secure user authentication API using JWT tokens. The API should support user registration, login, and token refresh functionality. Ensure that passwords are hashed and that the API follows best practices for security and performance.</p>
+                        {taskDetails?.acceptanceCriteria || "-"}
+                        </p>
                     </div>
 
                 </div>
@@ -138,7 +225,7 @@ const TaskDetails = () => {
                                 <span>Created By</span>
                             </div>
                             <div>
-                                Admin
+                                {userMap[taskDetails?.createdBy] || '-'}
                             </div>
                         </div>
 
@@ -148,7 +235,7 @@ const TaskDetails = () => {
                                 <span>Created on</span>
                             </div>
                             <div>
-                                12 May 2026 10:30 AM
+                                {formatDateTime(taskDetails?.createdAt) || '-'}
                             </div>
                         </div>
 
@@ -158,7 +245,7 @@ const TaskDetails = () => {
                                 <span>Developer</span>
                             </div>
                             <div>
-                                Dhananjay (you)
+                                {developerMap[taskDetails?.developerId] || '-'} (you)
                             </div>
                         </div>
 
@@ -169,7 +256,7 @@ const TaskDetails = () => {
                                 <span>Tester</span>
                             </div>
                             <div>
-                               Rahul Tester
+                               {testerMap[taskDetails?.testerId] || '-'}
                             </div>
                         </div>
 
@@ -180,7 +267,7 @@ const TaskDetails = () => {
                             </div>
                             <div>
                                 <span className="text-sm text-gray-500 bg-gray-100 text-red-600 rounded-sm px-2 py-1 w-fit font-semibold">
-                                 High
+                                    {taskDetails?.priority || '-'}
                                 </span>
                             </div>
                         </div>
@@ -191,7 +278,7 @@ const TaskDetails = () => {
                                 <span>Task Type</span>
                             </div>
                             <div>
-                               Feature
+                                {taskDetails?.taskType || '-'}
                             </div>
                         </div>
 
@@ -201,9 +288,9 @@ const TaskDetails = () => {
 
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-4 rounded-sm shadow-sm mt-4">
+            <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-4 rounded-sm mt-4">
 
-                <div className="bg-white rounded-sm shadow-sm p-4">
+                <div className="bg-white rounded-sm p-4">
                     
                     <div className="">
                         <h4 className="font-bold mb-2">Development Details</h4>
@@ -219,51 +306,75 @@ const TaskDetails = () => {
                             ></textarea>
                         </div>
 
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-2 rounded-sm shadow-sm mt-4 mb-2">
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-2 rounded-sm mt-4 mb-2">
                             
-                            <div className="flex flex-col gap-2">
-                                <label className="font-semibold">
+                            <div className="flex flex-col gap-1">
+                                <label className="font-semibold text-sm">
                                     Started At
                                 </label>
 
-                                <div className="relative">
-                                    <input
-                                    type="text"
-                                    className="w-full p-2 pr-10 border border-gray-300 rounded-sm text-sm"
-                                    placeholder="Started At"
+                                <div className="relative w-full">
+                                    <Controller 
+                                        name="startedAt"
+                                        control={control}
+                                        render={
+                                            ({field}) => (
+                                                <DatePicker
+                                                    plugins={[<TimePicker position="bottom" />]}
+                                                    value={field.value}
+                                                    onChange={(date) => field.onChange(date)}
+                                                    format="DD/MM/YYYY hh:mm A"
+                                                    className="w-full"
+                                                    inputClass="w-full px-3 py-2.5 pr-10 border border-gray-300 rounded-sm text-sm"
+                                                    editable={false}
+                                                />
+                                            )
+                                        }
                                     />
 
-                                    <CalendarClock
+                                    {/* <CalendarClock
                                     size={16}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
-                                    />
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+                                    /> */}
                                 </div>
                             </div>
                             
-                            <div className="flex flex-col gap-2">
-                                <label className="font-semibold">
+                            <div className="flex flex-col gap-1">
+                                <label className="font-semibold text-sm">
                                     Ended At
                                 </label>
 
-                                <div className="relative">
-                                    <input
-                                    type="text"
-                                    className="w-full p-2 pr-10 border border-gray-300 rounded-sm text-sm"
-                                    placeholder="Started At"
+                                <div className="relative w-full">
+                                    <Controller 
+                                        name="endedAt"
+                                        control={control}
+                                        render={
+                                            ({field}) => (
+                                                <DatePicker
+                                                    plugins={[<TimePicker position="bottom" />]}
+                                                    value={field.value}
+                                                    onChange={(date) => field.onChange(date)}
+                                                    format="DD/MM/YYYY hh:mm A"
+                                                    className="w-full"
+                                                    inputClass="w-full px-3 py-2.5 pr-10 border border-gray-300 rounded-sm text-sm"
+                                                    editable={false}
+                                                />
+                                            )
+                                        }
                                     />
 
-                                    <CalendarClock
+                                    {/* <CalendarClock
                                     size={16}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
-                                    />
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+                                    /> */}
                                 </div>
                             </div>
 
-                            <div className="flex flex-col gap-2">
-                                <label className="font-semibold">
+                            <div className="flex flex-col gap-1">
+                                <label className="font-semibold text-sm">
                                     Time Spent
                                 </label>
-                                <input type="text" className="w-full p-2 border border-gray-300 rounded-sm text-sm" placeholder="Duration" />
+                                <input type="text" className="w-full px-3 py-2.5 border border-gray-300 rounded-sm text-sm" placeholder="Duration" />
                             </div>
 
                         </div>
@@ -359,12 +470,12 @@ const TaskDetails = () => {
                     
                     <div className="flex gap-2 text-sm mb-2">
 
-                        <button type="button" className="flex items-center gap-1 bg-white-600 text-sm rounded-sm px-3 py-2 border border-gray-300 hover:bg-white-100 ml-2">
+                        <button type="button" className="flex items-center gap-1 bg-white-600 text-sm rounded-sm px-2.5 py-1.5 border border-gray-300 hover:bg-white-100 ml-2">
                             <Edit size={16} /> Save Progress
                         </button>
 
 
-                        <button onClick={handleTestCasesBtn} type="button" className="flex items-center gap-1 bg-blue-600  text-sm text-white rounded-sm px-3 py-2 border border-blue-300 hover:bg-white-100 ml-2">
+                        <button onClick={handleTestCasesBtn} type="button" className="flex items-center gap-1 bg-blue-600  text-sm text-white rounded-sm px-2.5 py-1.5 border border-blue-300 hover:bg-white-100 ml-2">
                             <ShieldCheck size={16} /> Test Cases
                         </button>
 
@@ -372,10 +483,30 @@ const TaskDetails = () => {
 
                 </div>
 
-                <div className="bg-white rounded-sm shadow-sm p-4 flex items-center justify-end">
+                <div className="bg-white rounded-sm shadow-sm p-3 flex flex-wrap items-center justify-end gap-2">
 
-                    <button type="button" className="flex items-center gap-1 bg-green-600 text-sm text-white rounded-sm px-3 py-2 border border-blue-300 hover:bg-white-100 ml-2">
-                            <ShieldCheck size={16} /> Mark as Ready for Testing
+                    <button
+                        type="button"
+                        onClick={() => setMarkReadyConfirm(true)}
+                        className="inline-flex items-center gap-1.5 bg-blue-600 text-xs font-medium text-white rounded-sm px-2.5 py-1.5 border border-blue-700 hover:bg-blue-700 transition-colors"
+                    >
+                        <BadgeCheckIcon size={14} /> Dev Done
+                    </button>
+
+                    <button
+                        type="button"
+                        onClick={() => setMarkReadyConfirm(true)}
+                        className="inline-flex items-center gap-1.5 bg-white text-xs font-medium text-gray-700 rounded-sm px-2.5 py-1.5 border border-gray-300 hover:bg-gray-50 transition-colors"
+                    >
+                        <SkipBack size={14} /> Reopen
+                    </button>
+
+                    <button
+                        type="button"
+                        onClick={() => setMarkReadyConfirm(true)}
+                        className="inline-flex items-center gap-1.5 bg-green-600 text-xs font-medium text-white rounded-sm px-2.5 py-1.5 border border-green-700 hover:bg-green-700 transition-colors"
+                    >
+                        <ShieldCheck size={14} /> Mark Ready for Testing
                     </button>
 
                 </div>

@@ -61,8 +61,10 @@ const MyDevTasks = () => {
 
   const handleView = (info, action) => {
     const taskId = info.row.original.id;
+        const organizationId = info.row.original.organizationId;
+
     if(action === "view"){
-        navigate(`/development/taskdetails/${taskId}/view`);
+        navigate(`/development/taskdetails/${organizationId}/${taskId}/view`);
     }
   }
 

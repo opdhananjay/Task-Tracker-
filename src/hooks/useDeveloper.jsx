@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import { LoaderContext } from "../context/LoaderProvider";
 import { GetDeveloperOrgTaskLstService } from "../services/userService";
+import { GetTaskByIdService } from "../services/taskService";
 
 const useDeveloper = () => {
 
@@ -30,7 +31,23 @@ const useDeveloper = () => {
         }
     }
 
-    return { GetOrgDevTasksLst };
+    const GetTaskDetails = async (taskId) => {
+        try{
+            setLoading(true);
+            setError(null);
+            const response = await GetTaskByIdService(taskId);
+            return response.data;
+        }
+        catch(err){
+            setError(err.response.data.message || "Failed to fetch task details");
+            return null;
+        }
+        finally{
+            setLoading(false);
+        }
+    }
+
+    return { GetOrgDevTasksLst, GetTaskDetails };
     
 }
 

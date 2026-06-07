@@ -1,0 +1,61 @@
+
+TaskStatusHistory Table - 
+
+Id
+TaskId
+PreviousStatus
+NewStatus
+Remarks
+ChangedBy
+CreatedAtUtc
+
+
+
+TaskTestCases
+
+Id
+TaskId
+
+TestCaseTitle
+ExpectedResult
+
+DeveloperActualResult
+DeveloperStatus
+
+TesterActualResult
+TesterStatus
+
+TesterRemarks
+
+CreatedBy
+CreatedAtUtc
+
+UpdatedBy
+UpdatedAtUtc
+
+
+
+CREATE TABLE TaskComments
+(
+    Id INT PRIMARY KEY IDENTITY(1,1),
+
+    TaskId INT NOT NULL,
+
+    Comment VARCHAR(MAX) NOT NULL,
+
+    CreatedBy INT NOT NULL,
+
+    CreatedAtUtc DATETIME2 NOT NULL
+        DEFAULT SYSUTCDATETIME()
+)
+
+
+and edit Tasks Table and add other field 
+
+
+
+NOT_STARTED 
+=> "show start taks button else dont show start task button and then"
+=> "dont show mark as ready for testing button"
+=> ""
+

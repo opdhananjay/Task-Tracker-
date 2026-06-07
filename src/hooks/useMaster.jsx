@@ -2,6 +2,7 @@
 import { LoaderContext } from "../context/LoaderProvider";
 import { useContext, useState } from "react";
 import { GetOrganizationService, GetUserByRoleService } from "../services/masterService";
+import { GetUsersListService } from "../services/userService";
 
 const useMaster = () => {
 
@@ -13,11 +14,13 @@ const useMaster = () => {
     const [developers, setDevelopers] = useState([]);
     const [testers, setTesters] = useState([]);
     const [organization, setOrganization] = useState([]);
+    const [users, setUsers] = useState([]);
 
     // Lookup maps for quick ID → Name conversion
     const [developerMap, setDeveloperMap] = useState({});
     const [testerMap, setTesterMap] = useState({});
     const [organizationMap, setOrganizationMap] = useState({});
+    const [userMap, setUserMap] = useState({});
 
     const GetUserByRole = async (payload) => {
         setLoading(true)
@@ -82,6 +85,17 @@ const useMaster = () => {
                 setOrganizationMap(orgMap);
             }
 
+            const userResponse = await GetUsersListService(Number(organizationId));
+            if (userResponse.data?.success && userResponse.data?.data) {
+                const userList = userResponse.data.data;
+                setUsers(userList);
+                // Create user lookup map: { "1": "Dhananjay" }
+                const userMap = {};
+                userList.forEach(user => {
+                    userMap[user.id] = user.firstName + " " + user.lastName;
+                });
+                setUserMap(userMap);
+            }
 
         } catch (err) {
             console.error(err);
@@ -100,6 +114,8 @@ const useMaster = () => {
         developerMap,
         testerMap,
         organizationMap,
+        userMap,
+        users,
         error 
     };
 }
