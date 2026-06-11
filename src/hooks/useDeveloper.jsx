@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { LoaderContext } from "../context/LoaderProvider";
 import { GetDeveloperOrgTaskLstService } from "../services/userService";
-import { GetTaskByIdService } from "../services/taskService";
+import { GetTaskByIdService, SaveProgressService } from "../services/taskService";
 
 const useDeveloper = () => {
 
@@ -47,7 +47,24 @@ const useDeveloper = () => {
         }
     }
 
-    return { GetOrgDevTasksLst, GetTaskDetails };
+    const TaskSaveProgressService = async (payload) => {
+        try{
+            setLoading(true);
+            setError(null);
+            const response = await SaveProgressService(payload);
+            return response.data;
+        }
+        catch(err){
+            setError(err.response.data.message || "Failed to save task progress");
+            return null;
+        }
+        finally{
+            setLoading(false);
+        }
+    }
+ 
+
+    return { GetOrgDevTasksLst, GetTaskDetails, TaskSaveProgressService, error };
     
 }
 

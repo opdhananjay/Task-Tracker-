@@ -17,7 +17,7 @@ const TaskDetails = () => {
 
     const { organizationId, action, taskId } = useParams();
 
-    const { GetTaskDetails } = useDeveloper();
+    const { GetTaskDetails,TaskSaveProgressService, error } = useDeveloper();
 
     const { fetchDevelopersAndTestersAndOrg,developerMap,testerMap,organizationMap,userMap } = useMaster();
 
@@ -27,7 +27,7 @@ const TaskDetails = () => {
 
     const [overAllTaskStatus, setOverAllTaskStatus] = useState(TASK_STATUS["TESTING_FAILED"]);
 
-    const { control } = useForm();
+    const { register, control, handleSubmit, getValues, reset } = useForm();
 
     const [startTaskConfirm, setStartTaskConfirm] = useState(false);
 
@@ -42,7 +42,7 @@ const TaskDetails = () => {
 
     const [statusHistory, setStatusHistory] = useState([]);
 
-   useEffect(() => {
+    useEffect(() => {
         
         if(taskId){
             // Fetch task details using taskId
@@ -56,9 +56,15 @@ const TaskDetails = () => {
                 const response = await GetTaskDetails(taskId);
                 if(response?.success && response?.data){
                     console.log("Task details fetched successfully:", response.data);
-                    // You can set the task details in state here to display in the UI
-                    setTaskDetails(response.data[0]);
-                    setOverAllTaskStatus(TASK_STATUS[response.data[0].status] || '-');
+                    const task = response.data[0];
+                    setTaskDetails(task);
+                    setOverAllTaskStatus(TASK_STATUS[task.status] || '-');
+                    reset({
+                        DevNote: task.devNote || '',
+                        DevStartDateTime: task.devStartDateTime ? new Date(task.devStartDateTime) : null,
+                        DevEndDateTime: task.devEndDateTime ? new Date(task.devEndDateTime) : null,
+                        devUnitTestingNote: task.devUnitTestingNote || ''
+                    });
                 }
                 else{
                     toast.error(response?.message || "Failed to fetch task details");
@@ -85,6 +91,54 @@ const TaskDetails = () => {
         setMarkReadyConfirm(false);
     };
 
+    const getDateValue = (val) => {
+        // If it's a custom picker object with .toDate(), use it
+        if (val && typeof val.toDate === "function") {
+            return val.toDate().toISOString();
+        }
+        // If it's a JS Date object, use it directly
+        if (val instanceof Date) {
+            return val.toISOString();
+        }
+        // If it's already a string, return as is (or handle as needed)
+        return val || null;
+    };
+
+    const handleSaveProgress = async (formData) => {
+        // formData will be provided by react-hook-form's handleSubmit
+        // fallback to getValues() if needed
+        const values = formData || getValues();
+
+        if(!taskId || Number.isNaN(Number(taskId))){
+            toast.error("No task found. Cannot save progress.");
+            return;
+        }
+        
+        const dataToSend = {
+            taskId: Number(taskId),
+            devNote:values.DevNote,
+            devUnitTestingNotes:values.devUnitTestingNote,
+            devStartDateTime: getDateValue(values.DevStartDateTime),
+            devEndDateTime: getDateValue(values.DevEndDateTime)
+        }
+        
+        console.log('save progress', dataToSend);
+        // TODO: call API to persist development progress
+        
+        var response = await TaskSaveProgressService(dataToSend);
+
+        if(!response){
+            toast.error(error || "Failed to save progress");
+            return;
+        }
+
+        if(response?.success && response.statusCode === 200){
+            toast.success(response.message || "Progress saved successfully");
+        }
+        else{
+            toast.error(response?.message || "Failed to save progress");
+        }
+    }
 
     return (
         <>
@@ -300,7 +354,8 @@ const TaskDetails = () => {
 
                         <div className="flex flex-col gap-2 text-sm">
                             <h5 className="flex items-center gap-2 ">Development Notes <Info size={16} /></h5>
-                            <textarea
+                            <textarea name="DevNote"
+                            {...register("DevNote")}
                             className="w-full h-32 resize-none p-2 border border-gray-300 rounded-sm text-sm"
                             placeholder="Add development notes here..."
                             ></textarea>
@@ -315,7 +370,7 @@ const TaskDetails = () => {
 
                                 <div className="relative w-full">
                                     <Controller 
-                                        name="startedAt"
+                                        name="DevStartDateTime"
                                         control={control}
                                         render={
                                             ({field}) => (
@@ -346,8 +401,9 @@ const TaskDetails = () => {
 
                                 <div className="relative w-full">
                                     <Controller 
-                                        name="endedAt"
+                                        name="DevEndDateTime"
                                         control={control}
+                                        defaultValue={taskDetails?.devEndDateTime ? new Date(taskDetails.devEndDateTime) : null}
                                         render={
                                             ({field}) => (
                                                 <DatePicker
@@ -382,7 +438,8 @@ const TaskDetails = () => {
 
                         <div className="flex flex-col gap-2 text-sm">
                             <h5 className="flex items-center gap-2 ">Unit Testing Notes <Info size={16} /></h5>
-                            <textarea
+                            <textarea name="devUnitTestingNote"
+                            {...register("devUnitTestingNote")}
                             className="w-full h-32 resize-none p-2 border border-gray-300 rounded-sm text-sm"
                             placeholder="Add development notes here..."
                             ></textarea>
@@ -470,7 +527,7 @@ const TaskDetails = () => {
                     
                     <div className="flex gap-2 text-sm mb-2">
 
-                        <button type="button" className="flex items-center gap-1 bg-white-600 text-sm rounded-sm px-2.5 py-1.5 border border-gray-300 hover:bg-white-100 ml-2">
+                        <button onClick={handleSubmit(handleSaveProgress)} type="button" className="flex items-center gap-1 bg-white-600 text-sm rounded-sm px-2.5 py-1.5 border border-gray-300 hover:bg-white-100 ml-2">
                             <Edit size={16} /> Save Progress
                         </button>
 

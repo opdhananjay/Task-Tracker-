@@ -35,13 +35,15 @@ closed
 
 
 
-1. bind task details 
-2. work on save progress 
-4. work on task status section 
+1. bind task details  => done 
+2. work on save progress  => done 
+4. work on task status section  
 3. work on start task 
 5. work on update task 
 6. work on ready for Testing
 7. reopen 
-8. dev done 
+8. dev done
+
+
 
 

@@ -15,3 +15,7 @@ export const GetTaksService = (organizationId) => {
 export const GetTaskByIdService = (taskId) => {
     return axiosInstance.get(`/Tracker/GetTaskById/${taskId}`);
 }
+
+export const SaveProgressService = (payload) => {
+    return axiosInstance.put('/Tracker/SaveProgress', payload);
+}
