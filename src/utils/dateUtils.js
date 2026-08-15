@@ -1,7 +1,7 @@
 // Helper function to format ISO date to readable format
 export const formatDateTime = (isoString) => {
     if (!isoString) return "-";
-    
+
     const date = new Date(isoString);
     
     const day = String(date.getDate()).padStart(2, '0');
@@ -17,4 +17,15 @@ export const formatDateTime = (isoString) => {
     const formattedHours = String(hours).padStart(2, '0');
     
     return `${day}/${month}/${year} ${formattedHours}:${minutes} ${ampm}`;
+};
+
+
+export const formatDate = (isoString) => {
+    if (!isoString) return "-";
+
+    const date = new Date(isoString);
+
+    return date.toLocaleString("en-IN", {
+        timeZone: "Asia/Kolkata",
+    });
 };

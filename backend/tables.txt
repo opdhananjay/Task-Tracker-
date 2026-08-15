@@ -1,36 +1,45 @@
 
-TaskStatusHistory Table - 
+CREATE TABLE TaskStatusHistory
+(
+    Id INT IDENTITY(1,1) PRIMARY KEY,
 
-Id
-TaskId
-PreviousStatus
-NewStatus
-Remarks
-ChangedBy
-CreatedAtUtc
+    TaskId INT NOT NULL,
 
+    PreviousStatus NVARCHAR(100) NULL,
+    NewStatus NVARCHAR(100) NOT NULL,
 
-TaskTestCases
+    Remarks NVARCHAR(4000) NULL,
 
-Id
-TaskId
+    ChangedBy INT NOT NULL,
 
-TestCaseTitle
-ExpectedResult
+    CreatedAtUtc DATETIME2 NOT NULL
+        DEFAULT SYSUTCDATETIME()
+);
 
-DeveloperActualResult
-DeveloperStatus
+CREATE TABLE TaskTestCases
+(
+    Id INT IDENTITY(1,1) PRIMARY KEY,
 
-TesterActualResult
-TesterStatus
+    TaskId INT NOT NULL,
 
-TesterRemarks
+    TestCaseTitle NVARCHAR(500) NOT NULL,
+    ExpectedResult NVARCHAR(MAX) NULL,
 
-CreatedBy
-CreatedAtUtc
+    DeveloperActualResult NVARCHAR(MAX) NULL,
+    DeveloperStatus NVARCHAR(50) NULL,
 
-UpdatedBy
-UpdatedAtUtc
+    TesterActualResult NVARCHAR(MAX) NULL,
+    TesterStatus NVARCHAR(50) NULL,
+    TesterRemarks NVARCHAR(4000) NULL,
+
+    CreatedBy INT NOT NULL,
+    CreatedAtUtc DATETIME2 NOT NULL
+        DEFAULT SYSUTCDATETIME(),
+
+    UpdatedBy INT NULL,
+    UpdatedAtUtc DATETIME2 NULL
+);
+
 
 
 CREATE TABLE TaskComments

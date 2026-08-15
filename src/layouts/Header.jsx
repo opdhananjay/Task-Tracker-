@@ -23,8 +23,9 @@ const Header = ({ toggleSidebar }) => {
                     <Menu size={16} />     
                 </button>
                 <h1 className="text-lg font-semibold">
-                    Tracker 
+                    Tracker <small className="">Intenal JIRA</small>
                 </h1>
+                
             </div>
 
             {/* Middle Section  */}

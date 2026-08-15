@@ -58,8 +58,8 @@ export const menus = [
     roles: ['Tester', 'Manager', 'Admin'],
     children: [
       {
-        name: 'Testing Queue',
-        path: '/testing/queue',
+        name: 'Testing List',
+        path: '/testing/testinglist',
         roles: ['Tester','Admin']
       },
       {

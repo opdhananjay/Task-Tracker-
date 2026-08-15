@@ -8,8 +8,9 @@ import {
 } from "@tanstack/react-table";
 import { useEffect, useState } from "react";
 import TestCaseTransaction from "./TestCaseTransaction";
+import { formatDate, formatDateTime } from "../../utils/dateUtils";
 
-const TestCases = () => {
+const TestCases = ({ taskId, GetTestCasesByTaskId, TestCasesSaveUpdateService, error , getUserFromToken}) => {
   const [showForm, setShowForm] = useState(false);
   const [selectedTestCase, setSelectedTestCase] = useState(null);
 
@@ -19,22 +20,36 @@ const TestCases = () => {
     developerActualResult: false,
     testerActualResult: false,
   });
-
+  
   const [testCases, setTestCases] = useState([]);
 
+
+  const fetchTestCases = async () => {
+      const response = await GetTestCasesByTaskId(taskId);
+      if (response?.success && response?.data) {
+        setTestCases(response.data);
+      } else {
+        console.error(response?.message || "Failed to fetch test cases");
+      }
+   };
+    
+
   useEffect(() => {
-    setTestCases([
-      {
-        id: 1,
-        testCaseTitle: "Test Case 1",
-        expectedResult: "Expected Result 1",
-        developerActualResult: "Dev Actual Result 1",
-        testerActualResult: "Tester Actual Result 1",
-        developerStatus: "PASSED",
-        testerStatus: "FAILED",
-        testerRemarks: "Tester Remarks 1",
-      },
-    ]);
+    // setTestCases([
+    //   {
+    //     id: 1,
+    //     testCaseTitle: "Test Case 1",
+    //     expectedResult: "Expected Result 1",
+    //     developerActualResult: "Dev Actual Result 1",
+    //     testerActualResult: "Tester Actual Result 1",
+    //     developerStatus: "PASSED",
+    //     testerStatus: "FAILED",
+    //     testerRemarks: "Tester Remarks 1",
+    //   },
+    // ]);
+
+    fetchTestCases();
+
   },[])
 
   const columnHelper = createColumnHelper();
@@ -44,6 +59,7 @@ const TestCases = () => {
       setSelectedTestCase(null);
       setMode("new");
       setShowForm(false);
+      fetchTestCases();
     } else {
       setSelectedTestCase(null);
       setMode("new");
@@ -72,7 +88,7 @@ const TestCases = () => {
               type="button"
               title="View"
               className="text-blue-600 hover-underline cursor-pointer"
-              onClick={() => handleView(info, "view")}
+              onClick={() => handleView(info, "edit")}
             >
               <Eye size={16} />
             </button>
@@ -143,6 +159,24 @@ const TestCases = () => {
         </span>
       ),
     }),
+
+    columnHelper.accessor("createdAtUtc", {
+      cell: (info) => formatDate(info.getValue()),
+      header: () => (
+        <span className="flex items-center">
+          <InfoIcon className="mr-2" size={16} /> Created At
+        </span>
+      ),
+    }),
+
+      columnHelper.accessor("updatedAtUtc", {
+      cell: (info) => formatDate(info.getValue()),
+      header: () => (
+        <span className="flex items-center">
+          <InfoIcon className="mr-2" size={16} /> Updated At
+        </span>
+      ),
+    }),
   ];
 
   const table = useReactTable({
@@ -168,7 +202,7 @@ const TestCases = () => {
 
       <div className="">
         {showForm && (
-          <TestCaseTransaction testCase={selectedTestCase} mode={mode} />
+          <TestCaseTransaction taskId={taskId} testCase={selectedTestCase} mode={mode} TestCasesSaveUpdateService={TestCasesSaveUpdateService} getUserFromToken={getUserFromToken}  />
         )}
       </div>
 

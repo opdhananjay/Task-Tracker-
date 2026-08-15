@@ -1,44 +1,55 @@
 import { createColumnHelper, flexRender, getCoreRowModel, getFilteredRowModel, useReactTable } from "@tanstack/react-table";
-import { BookOpenText, Bug, ChartColumnBig, CircleX, Equal, Eye, Info, Search, Timer, TimerOff, User } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import useTask from "../../hooks/useTask";
-import useAuth from "../../hooks/useAuth";
+import { BookOpenText, Bug, ChartColumnBig, Equal, Eye, Info, Search, Timer, TimerOff, User } from "lucide-react";
 import useMaster from "../../hooks/useMaster";
+import { useEffect, useState } from "react";
+import useAuth from "../../hooks/useAuth";
+import useTask from "../../hooks/useTask";
+import { useNavigate } from "react-router-dom";
 import { formatDateTime } from "../../utils/dateUtils";
 
-const TaskList = () => {
+const TestingList = () => {
+
+    const navigate = useNavigate();
+
+    const [data,setData] = useState([]);
 
     const { getUserFromToken } = useAuth();
-    const [data, setData] = useState([]);
+
     const { getTasks } = useTask();
-    
-    // Get lookup maps from useMaster
+
     const { fetchDevelopersAndTestersAndOrg, developerMap, testerMap , organizationMap } = useMaster();
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const user = getUserFromToken();
-            const orgId = user.organizationId;
-
-            // Fetch developers & testers first (to build lookup maps)
-            await fetchDevelopersAndTestersAndOrg(orgId);
-            // Then fetch tasks
-            const response = await getTasks(Number(orgId));
-            console.log('tasks', response);
-            if (response?.success && response?.data) {
-                setData(response.data);
-            }
-        };
-
-        fetchData();
-    }, []);
 
     const columneHelper = createColumnHelper();
 
+    useEffect(()=>{
+
+        const fetchData = async () => {
+            const user = getUserFromToken();
+            const orgId = user.organizationId;
+            // Fetch Master Lookup
+            await fetchDevelopersAndTestersAndOrg(orgId);
+            // Then Fetch tasks using orgid
+            const response = await getTasks(Number(orgId));
+            if(response?.success && response?.data){
+                setData(response.data);
+            }
+        }
+
+        fetchData();
+
+    },[]);
+
+
+    const handleView = (info,mode) => {
+        const taskId = info.row.original.id;
+        const organizationId = info.row.original.organizationId;
+        navigate(`/testing/testingDetails/${organizationId}/${taskId}/view`)
+    }   
+
+    
     const columns = [
 
-        columneHelper.display({
+   columneHelper.display({
             id:"view",
             header:"act",
             cell:(info) => (
@@ -50,15 +61,7 @@ const TaskList = () => {
                     >
                         <Eye size={16} />
                     </button>
-                    {/* Hide Close button if status is 'CLOSED' */}
-                    {info.row.original.status !== 'CLOSED' && (
-                        <button type="button" title="Close Task"
-                            className="text-blue-600 hover-underline cursor-pointer"
-                            onClick={() => handleView(info,"close") }
-                        >
-                            <CircleX color="#d82222" size={16} />
-                        </button>
-                    )}
+                    
                 </div>
                 </>
             ),
@@ -172,15 +175,10 @@ const TaskList = () => {
                 </span>
             )
         }),
-    ]
 
-    const navigate = useNavigate();
+    ];
 
-    const handleView = (info, action) => {
-        navigate(`/tasks/create/${info.row.original.id}/${action}`)
-    }
-
-    const [globalFilter,setGlobalFilter] = useState("");    
+    const [globalFilter,setGlobalFilter] = useState("");
 
     const table = useReactTable({
         data,
@@ -190,13 +188,12 @@ const TaskList = () => {
         columns,
         onGlobalFilterChange:setGlobalFilter,
         getCoreRowModel:getCoreRowModel(),
-        getFilteredRowModel:getFilteredRowModel(),
-    });
+        getFilteredRowModel:getFilteredRowModel()
+    })
 
-    console.log('row',table.getHeaderGroups())
-
-    return (
-        <div className="flex flex-col min-h-screen max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+    return(
+        <>
+           <div className="flex flex-col min-h-screen max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
 
             <div className="mb-4 relative">
                 <input 
@@ -259,7 +256,10 @@ const TaskList = () => {
 
 
         </div>
+       </>
     )
+    
 }
 
-export default TaskList;
+export default TestingList;
+

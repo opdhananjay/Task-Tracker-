@@ -9,6 +9,7 @@ import useTask from "../../hooks/useTask";
 import useMaster from "../../hooks/useMaster";
 import { formatDateTime } from "../../utils/dateUtils";
 import { useNavigate } from "react-router-dom";
+import useDeveloper from "../../hooks/useDeveloper";
 
 const CreateTask = ({ taskId, action }) => {
 
@@ -26,6 +27,10 @@ const CreateTask = ({ taskId, action }) => {
     const { fetchDevelopersAndTestersAndOrg, developers, testers, error: masterError } = useMaster();
 
     const navigate = useNavigate();
+
+    const { CreateTaskHistory } = useDeveloper();
+
+    const [taskDetails, setTaskDetails] = useState(null);
 
     useEffect(() => {
 
@@ -67,6 +72,7 @@ const CreateTask = ({ taskId, action }) => {
                         assignedTo:data.developerId
                     }
 
+                    setTaskDetails(data);
                     reset(taksData);
                 }
             }
@@ -144,6 +150,14 @@ const CreateTask = ({ taskId, action }) => {
             }
 
             if(res.success && res.statusCode === 200){
+
+                const response = await CreateTaskHistory({
+                    taskId: Number(taskId),
+                    previousStatus: taskDetails?.status || '',
+                    newStatus: data.status,
+                    changedBy: Number(getUserFromTokenData.userId),
+                    remarks: 'updated from create task form by user - '
+                });
                 
                 toast.success(res.message || "Task updated successfully");
 

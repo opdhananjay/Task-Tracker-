@@ -1,5 +1,5 @@
 import { ArrowLeft, BadgeCheckIcon, CalendarClock, Code, Edit, EllipsisVertical, FolderDot, Info, Logs, MessageCircle, Play, ShieldAlert, ShieldCheck, SkipBack, TestTube, User } from "lucide-react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Modal from "../shared/Modal";
 import { useEffect, useState } from "react";
 import TestCases from "./TestCases";
@@ -12,12 +12,17 @@ import useDeveloper from "../../hooks/useDeveloper";
 import toast from "react-hot-toast";
 import { formatDateTime } from "../../utils/dateUtils";
 import useMaster from "../../hooks/useMaster";
+import useAuth from "../../hooks/useAuth";
 
 const TaskDetails = () => {
 
+    const navigate = useNavigate();
+
     const { organizationId, action, taskId } = useParams();
 
-    const { GetTaskDetails,TaskSaveProgressService, error } = useDeveloper();
+    const { getUserFromToken }  = useAuth();
+
+    const { GetTaskDetails,TaskSaveProgressService,GetTestCasesByTaskId,GetTaskStatusHistoryByTaskId,GetTaskCommentsByTaskId,TestCasesSaveUpdateService,CreateTaskHistory,CreateTaskComment,error } = useDeveloper();
 
     const { fetchDevelopersAndTestersAndOrg,developerMap,testerMap,organizationMap,userMap } = useMaster();
 
@@ -33,6 +38,10 @@ const TaskDetails = () => {
 
     const [markReadyConfirm, setMarkReadyConfirm] = useState(false);
 
+    const [openCommentsModal, setOpenCommentsModal] = useState(false);
+
+    const [commentText, setCommentText] = useState("");
+
 
     const [taskDetails, setTaskDetails] = useState(null);
 
@@ -42,52 +51,215 @@ const TaskDetails = () => {
 
     const [statusHistory, setStatusHistory] = useState([]);
 
+    const getStatusMeta = (statusValue) => {
+        return TASK_STATUS[statusValue] || {
+            label: statusValue || "Unknown",
+            color: "bg-gray-100 text-gray-700"
+        };
+    }
+
+    const fetchTaskDetails = async () => {
+        if(!taskId){
+            return;
+        }
+
+        const response = await GetTaskDetails(taskId);
+        if(response?.success && response?.data){
+            const task = response.data[0];
+            setTaskDetails(task);
+            setOverAllTaskStatus(TASK_STATUS[task.status] || '-');
+            reset({
+                DevNote: task.devNote || '',
+                DevStartDateTime: task.devStartDateTime ? new Date(task.devStartDateTime) : null,
+                DevEndDateTime: task.devEndDateTime ? new Date(task.devEndDateTime) : null,
+                devUnitTestingNote: task.devUnitTestingNote || ''
+            });
+        }
+        else{
+            toast.error(response?.message || "Failed to fetch task details");
+        }
+    }
+
+    const fetchTaskStatusHistory = async () => {
+        if(!taskId){
+            setStatusHistory([]);
+            return;
+        }
+
+        const response = await GetTaskStatusHistoryByTaskId(taskId);
+        if(response?.success && Array.isArray(response?.data)){
+            const sortedHistory = [...response.data].sort((a, b) => new Date(b.createdAtUtc) - new Date(a.createdAtUtc));
+            setStatusHistory(sortedHistory);
+            return;
+        }
+
+        setStatusHistory([]);
+    }
+
+    const fetchTaskComments = async () => {
+        if(!taskId){
+            setComments([]);
+            return;
+        }
+
+        const response = await GetTaskCommentsByTaskId(taskId);
+        if(response?.success && Array.isArray(response?.data)){
+            const sortedComments = [...response.data].sort((a, b) => {
+                const aDate = new Date(a?.createdAtUtc || a?.createdAt || 0);
+                const bDate = new Date(b?.createdAtUtc || b?.createdAt || 0);
+                return bDate - aDate;
+            });
+            setComments(sortedComments);
+            return;
+        }
+
+        setComments([]);
+    }
+
     useEffect(() => {
         
         if(taskId){
-            // Fetch task details using taskId
-            console.log("Fetch details for taskId:", taskId);
-
-            
-
-            
-
-            const fetchTaskDetails = async () => {
-                const response = await GetTaskDetails(taskId);
-                if(response?.success && response?.data){
-                    console.log("Task details fetched successfully:", response.data);
-                    const task = response.data[0];
-                    setTaskDetails(task);
-                    setOverAllTaskStatus(TASK_STATUS[task.status] || '-');
-                    reset({
-                        DevNote: task.devNote || '',
-                        DevStartDateTime: task.devStartDateTime ? new Date(task.devStartDateTime) : null,
-                        DevEndDateTime: task.devEndDateTime ? new Date(task.devEndDateTime) : null,
-                        devUnitTestingNote: task.devUnitTestingNote || ''
-                    });
-                }
-                else{
-                    toast.error(response?.message || "Failed to fetch task details");
-                }
-            }
-
             fetchDevelopersAndTestersAndOrg(organizationId); 
             fetchTaskDetails();
+            fetchTaskStatusHistory();
+            fetchTaskComments();
         }
         
-    },[taskId])
+    },[taskId, organizationId])
 
     const handleTestCasesBtn = () => {
         setOpenTestCases(true);
     }
 
-    const handleStartTaskConfirm = () => {
-        console.log("Task started");
+    const handleOpenCommentsModal = async () => {
+        await fetchTaskComments();
+        setOpenCommentsModal(true);
+    }
+
+    const handleAddComment = async () => {
+        const createdBy = Number(getUserFromToken()?.userId);
+
+        if(!Number.isInteger(createdBy) || createdBy <= 0){
+            toast.error("Invalid user. Please login again.");
+            return;
+        }
+
+        const response = await CreateTaskComment({
+            taskId: Number(taskId),
+            comment: commentText.trim(),
+            createdBy
+        });
+
+        if(!response){
+            toast.error(error || "Failed to add comment");
+            return;
+        }
+
+        if(response?.success){
+            toast.success(response?.message || "Comment added successfully");
+            setCommentText("");
+            await fetchTaskComments();
+            return;
+        }
+
+        toast.error(response?.message || "Failed to add comment");
+    }
+
+    const buildSaveProgressPayload = () => {
+        const values = getValues();
+
+        return {
+            taskId: Number(taskId),
+            devNote: values.DevNote,
+            devUnitTestingNotes: values.devUnitTestingNote,
+            devStartDateTime: getDateValue(values.DevStartDateTime),
+            devEndDateTime: getDateValue(values.DevEndDateTime)
+        }
+    }
+
+    const saveProgressInternal = async (showToast = true) => {
+        if(!taskId || Number.isNaN(Number(taskId))){
+            toast.error("No task found. Cannot save progress.");
+            return false;
+        }
+
+        const response = await TaskSaveProgressService(buildSaveProgressPayload());
+
+        if(!response){
+            if(showToast){
+                toast.error(error || "Failed to save progress");
+            }
+            return false;
+        }
+
+        if(response?.success && response.statusCode === 200){
+            if(showToast){
+                toast.success(response.message || "Progress saved successfully");
+            }
+            return true;
+        }
+
+        if(showToast){
+            toast.error(response?.message || "Failed to save progress");
+        }
+        return false;
+    }
+
+    const changeTaskStatus = async (newStatus, remarks, saveProgressFirst = false) => {
+        const changedBy = Number(getUserFromToken()?.userId);
+
+        if(!Number.isInteger(changedBy) || changedBy <= 0){
+            toast.error("Invalid user. Please login again.");
+            return false;
+        }
+
+        if(saveProgressFirst){
+            const progressSaved = await saveProgressInternal(false);
+            if(!progressSaved){
+                toast.error("Please save valid progress before updating status.");
+                return false;
+            }
+        }
+
+        const response = await CreateTaskHistory({
+            taskId: Number(taskId),
+            previousStatus: taskDetails?.status || '',
+            newStatus,
+            changedBy,
+            remarks
+        });
+
+        if(!response){
+            toast.error(error || "Failed to update task status");
+            return false;
+        }
+
+        if(response?.success){
+            toast.success(response?.message || "Task status updated successfully");
+            await fetchTaskDetails();
+            await fetchTaskStatusHistory();
+            return true;
+        }
+
+        toast.error(response?.message || "Failed to update task status");
+        return false;
+    }
+
+    const handleStartTaskConfirm = async () => {
+        await changeTaskStatus(TASK_STATUS.IN_PROGRESS.value, "Task started by developer");
         setStartTaskConfirm(false);
     };
 
-    const handleMarkReadyConfirm = () => {
-        console.log("Task marked as ready for testing");
+    const handleDevDone = async () => {
+        await changeTaskStatus(TASK_STATUS.DEV_DONE.value, "Task marked as development done", true);
+    }
+
+    const handleReopen = async () => {
+        await changeTaskStatus(TASK_STATUS.IN_PROGRESS.value, "Task reopened by developer", true);
+    }
+
+    const handleMarkReadyConfirm = async () => {
+        await changeTaskStatus(TASK_STATUS.TESTING_QUEUED.value, "Task marked ready for testing");
         setMarkReadyConfirm(false);
     };
 
@@ -105,39 +277,14 @@ const TaskDetails = () => {
     };
 
     const handleSaveProgress = async (formData) => {
-        // formData will be provided by react-hook-form's handleSubmit
-        // fallback to getValues() if needed
-        const values = formData || getValues();
+        if(formData){
+            reset(formData, { keepValues: true });
+        }
+        await saveProgressInternal(true);
+    }
 
-        if(!taskId || Number.isNaN(Number(taskId))){
-            toast.error("No task found. Cannot save progress.");
-            return;
-        }
-        
-        const dataToSend = {
-            taskId: Number(taskId),
-            devNote:values.DevNote,
-            devUnitTestingNotes:values.devUnitTestingNote,
-            devStartDateTime: getDateValue(values.DevStartDateTime),
-            devEndDateTime: getDateValue(values.DevEndDateTime)
-        }
-        
-        console.log('save progress', dataToSend);
-        // TODO: call API to persist development progress
-        
-        var response = await TaskSaveProgressService(dataToSend);
-
-        if(!response){
-            toast.error(error || "Failed to save progress");
-            return;
-        }
-
-        if(response?.success && response.statusCode === 200){
-            toast.success(response.message || "Progress saved successfully");
-        }
-        else{
-            toast.error(response?.message || "Failed to save progress");
-        }
+    const handleBack = () => {
+        navigate('/development/mytasks');
     }
 
     return (
@@ -149,7 +296,7 @@ const TaskDetails = () => {
             title={`Test Cases for Task - ${taskId}`}
             width="max-w-4xl"
             >
-            <TestCases />
+            <TestCases taskId={taskId} GetTestCasesByTaskId={GetTestCasesByTaskId} TestCasesSaveUpdateService={TestCasesSaveUpdateService}  getUserFromToken={getUserFromToken}  />
         </Modal>
        
         <ConfirmationModal
@@ -172,19 +319,72 @@ const TaskDetails = () => {
             onCancel={() => setMarkReadyConfirm(false)}
         />
 
+        <Modal
+            isOpen={openCommentsModal}
+            onClose={() => setOpenCommentsModal(false)}
+            title={`Task Comments - ${taskId}`}
+            width="max-w-2xl"
+        >
+            <div className="flex flex-col gap-3">
+                <textarea
+                    value={commentText}
+                    onChange={(e) => setCommentText(e.target.value)}
+                    className="w-full h-28 resize-none p-2 border border-gray-300 rounded-sm text-sm"
+                    placeholder="Write your comment..."
+                ></textarea>
+
+                <div className="flex justify-end">
+                    <button
+                        type="button"
+                        onClick={handleAddComment}
+                        className="inline-flex items-center gap-1.5 bg-blue-600 text-xs font-medium text-white rounded-sm px-3 py-2 border border-blue-700 hover:bg-blue-700 transition-colors"
+                    >
+                        Add Comment
+                    </button>
+                </div>
+
+                <div className="border-t pt-3 max-h-72 overflow-y-auto">
+                    <h4 className="font-semibold text-sm mb-2">All Comments</h4>
+
+                    {comments.length === 0 && (
+                        <div className="text-xs text-gray-500 border border-dashed rounded-sm p-3">
+                            No comments added yet.
+                        </div>
+                    )}
+
+                    {comments.map((item) => {
+                        const createdByName = userMap[item?.createdBy] || `User ${item?.createdBy || "-"}`;
+                        const createdAt = item?.createdAtUtc || item?.createdAt;
+
+                        return (
+                            <div key={item?.id} className="border rounded-sm p-2 mb-2">
+                                <div className="flex items-start justify-between gap-2 mb-1">
+                                    <span className="text-xs font-semibold text-gray-700 min-w-0 break-words">{createdByName}</span>
+                                    <span className="text-[10px] text-gray-500 bg-gray-100 rounded px-1.5 py-0.5 h-fit font-medium whitespace-nowrap">
+                                        {formatDateTime(createdAt) || "-"}
+                                    </span>
+                                </div>
+                                <p className="text-xs text-gray-700 whitespace-pre-wrap break-words">{item?.comment || "-"}</p>
+                            </div>
+                        )
+                    })}
+                </div>
+            </div>
+        </Modal>
+
         <div className="w-full px-4 bg-gray-50">
 
            <div className="flex flex-col sm:flex-row sm:justify-between gap-3 p-4">
-                <div className="flex items-center gap-2 cursor-pointer text-blue-600 font-bold text-sm">
+                <div onClick={handleBack} className="flex items-center gap-2 cursor-pointer text-blue-600 font-bold text-sm">
                     <ArrowLeft size={16} />
                     <span>Back to My Tasks</span>
                 </div>
 
                 <div className="flex items-center gap-3">
-                    <div className="flex flex-1 items-center justify-center bg-gray-200 text-gray-700 text-sm rounded-sm px-3 py-2 gap-1">
+                    <button type="button" onClick={handleOpenCommentsModal} className="flex flex-1 items-center justify-center bg-gray-200 text-gray-700 text-sm rounded-sm px-3 py-2 gap-1 hover:bg-gray-300 transition-colors">
                     <MessageCircle size={16} />
                     <span>Add Comment</span>
-                    </div>
+                    </button>
 
                     <div className="flex items-center justify-center w-8 h-8 bg-green-600 text-white rounded-sm">
                     <EllipsisVertical size={16} />
@@ -206,13 +406,18 @@ const TaskDetails = () => {
                     </div>
 
                     <div className="flex items-center gap-2">
-                        <button type="button" onClick={() => setStartTaskConfirm(true)} className="flex items-center gap-1 bg-white-600  text-sm rounded-sm px-3 py-2 border border-gray-300 hover:bg-gray-100">
-                            <Play size={16} />  Start Task
-                        </button>
+                        {
+                            taskDetails?.status === TASK_STATUS.NOT_STARTED.value && (
 
-                        <button type="button" className="flex items-center gap-1 bg-orange-600  text-sm text-white rounded-sm px-3 py-2 border border-gray-300 hover:bg-white-100 ml-2">
+                                <button type="button" onClick={() => setStartTaskConfirm(true)} className="flex items-center gap-1 bg-white-600  text-sm rounded-sm px-3 py-2 border border-gray-300 hover:bg-gray-100">
+                                    <Play size={16} />  Start Task
+                                </button>
+                            )
+                        }
+
+                        {/* <button type="button" className="flex items-center gap-1 bg-orange-600  text-sm text-white rounded-sm px-3 py-2 border border-gray-300 hover:bg-white-100 ml-2">
                             <Edit size={16} />  Update Status
-                        </button>
+                        </button> */}
                     </div>
                     
                 </div>
@@ -381,7 +586,7 @@ const TaskDetails = () => {
                                                     format="DD/MM/YYYY hh:mm A"
                                                     className="w-full"
                                                     inputClass="w-full px-3 py-2.5 pr-10 border border-gray-300 rounded-sm text-sm"
-                                                    editable={false}
+                                                    editable={true}
                                                 />
                                             )
                                         }
@@ -413,7 +618,7 @@ const TaskDetails = () => {
                                                     format="DD/MM/YYYY hh:mm A"
                                                     className="w-full"
                                                     inputClass="w-full px-3 py-2.5 pr-10 border border-gray-300 rounded-sm text-sm"
-                                                    editable={false}
+                                                    editable={true}
                                                 />
                                             )
                                         }
@@ -426,12 +631,12 @@ const TaskDetails = () => {
                                 </div>
                             </div>
 
-                            <div className="flex flex-col gap-1">
+                            {/* <div className="flex flex-col gap-1">
                                 <label className="font-semibold text-sm">
                                     Time Spent
                                 </label>
                                 <input type="text" className="w-full px-3 py-2.5 border border-gray-300 rounded-sm text-sm" placeholder="Duration" />
-                            </div>
+                            </div> */}
 
                         </div>
 
@@ -455,66 +660,32 @@ const TaskDetails = () => {
                         Testing Status Updates
                     </h4>
 
-                    <div className="flex justify-between gap-2 text-xs border p-2 rounded-sm mb-2">
-                        <div>
-                        <h2 className="font-semibold text-xs">
-                            Not Started
-                        </h2>
-                        <span className="text-gray-600 text-wrap">
-                            Login API Started Remarks
-                        </span>
+                    {statusHistory.length === 0 && (
+                        <div className="text-xs text-gray-500 border border-dashed rounded-sm p-3">
+                            No status updates found.
                         </div>
+                    )}
 
-                        <span className="text-[10px] text-red-600 bg-gray-100 rounded px-1.5 py-0.5 h-fit font-medium whitespace-nowrap">
-                        10 May 2024, 10:30 AM
-                        </span>
-                    </div>
+                    {statusHistory.map((item) => {
+                        const statusMeta = getStatusMeta(item?.newStatus);
 
+                        return (
+                            <div key={item?.id} className="flex items-start justify-between gap-2 text-xs border p-2 rounded-sm mb-2">
+                                <div className="min-w-0 flex-1">
+                                    <h2 className="font-semibold text-xs break-words">
+                                        {statusMeta.label} 
+                                    </h2>
+                                    <span className="text-gray-600 whitespace-pre-wrap break-words block">
+                                        {item?.remarks || "-"}
+                                    </span>
+                                </div>
 
-                    <div className="flex justify-between gap-2 text-xs border p-2 rounded-sm mb-2">
-                        <div>
-                        <h2 className="font-semibold text-xs">
-                            Not Started
-                        </h2>
-                        <span className="text-gray-600 text-wrap">
-                            Login API Started Remarks
-                        </span>
-                        </div>
-
-                        <span className="text-[10px] text-red-600 bg-gray-100 rounded px-1.5 py-0.5 h-fit font-medium whitespace-nowrap">
-                        10 May 2024, 10:30 AM
-                        </span>
-                    </div>
-
-                    <div className="flex justify-between gap-2 text-xs border p-2 rounded-sm mb-2">
-                        <div>
-                        <h2 className="font-semibold text-xs">
-                            Not Started
-                        </h2>
-                        <span className="text-gray-600 text-wrap">
-                            Login API Started Remarks
-                        </span>
-                        </div>
-
-                        <span className="text-[10px] text-red-600 bg-gray-100 rounded px-1.5 py-0.5 h-fit font-medium whitespace-nowrap">
-                        10 May 2024, 10:30 AM
-                        </span>
-                    </div>
-
-                    <div className="flex justify-between gap-2 text-xs border p-2 rounded-sm mb-2">
-                        <div>
-                        <h2 className="font-semibold text-xs">
-                            Not Started
-                        </h2>
-                        <span className="text-gray-600 text-wrap">
-                            Login API Started Remarks
-                        </span>
-                        </div>
-
-                        <span className="text-[10px] text-red-600 bg-gray-100 rounded px-1.5 py-0.5 h-fit font-medium whitespace-nowrap">
-                        10 May 2024, 10:30 AM
-                        </span>
-                    </div>
+                                <span className={`text-[10px] rounded px-1.5 py-0.5 h-fit font-medium whitespace-nowrap ${statusMeta.color}`}>
+                                    {formatDateTime(item?.createdAtUtc) || "-"} | {userMap[item?.changedBy] || "-"}
+                                </span>
+                            </div>
+                        )
+                    })}
 
 
                 </div>
@@ -525,46 +696,60 @@ const TaskDetails = () => {
 
                 <div className="bg-white rounded-sm shadow-sm p-4">
                     
-                    <div className="flex gap-2 text-sm mb-2">
+                    {
 
-                        <button onClick={handleSubmit(handleSaveProgress)} type="button" className="flex items-center gap-1 bg-white-600 text-sm rounded-sm px-2.5 py-1.5 border border-gray-300 hover:bg-white-100 ml-2">
-                            <Edit size={16} /> Save Progress
-                        </button>
+                            (taskDetails?.status === TASK_STATUS.NOT_STARTED.value || taskDetails?.status === TASK_STATUS.IN_PROGRESS.value) && (
+                                <div className="flex gap-2 text-sm mb-2">
+
+                                    <button onClick={handleSubmit(handleSaveProgress)} type="button" className="flex items-center gap-1 bg-white-600 text-sm rounded-sm px-2.5 py-1.5 border border-gray-300 hover:bg-white-100 ml-2">
+                                        <Edit size={16} /> Save Progress
+                                    </button>
 
 
-                        <button onClick={handleTestCasesBtn} type="button" className="flex items-center gap-1 bg-blue-600  text-sm text-white rounded-sm px-2.5 py-1.5 border border-blue-300 hover:bg-white-100 ml-2">
-                            <ShieldCheck size={16} /> Test Cases
-                        </button>
+                                    <button onClick={handleTestCasesBtn} type="button" className="flex items-center gap-1 bg-blue-600  text-sm text-white rounded-sm px-2.5 py-1.5 border border-blue-300 hover:bg-white-100 ml-2">
+                                        <ShieldCheck size={16} /> Test Cases
+                                    </button>
 
-                    </div>
+                                </div>
 
+                            )
+
+                        }
+
+                    
                 </div>
 
                 <div className="bg-white rounded-sm shadow-sm p-3 flex flex-wrap items-center justify-end gap-2">
 
-                    <button
-                        type="button"
-                        onClick={() => setMarkReadyConfirm(true)}
-                        className="inline-flex items-center gap-1.5 bg-blue-600 text-xs font-medium text-white rounded-sm px-2.5 py-1.5 border border-blue-700 hover:bg-blue-700 transition-colors"
-                    >
-                        <BadgeCheckIcon size={14} /> Dev Done
-                    </button>
+                    {taskDetails?.status === TASK_STATUS.IN_PROGRESS.value && (
+                        <button
+                            type="button"
+                            onClick={handleDevDone}
+                            className="inline-flex items-center gap-1.5 bg-blue-600 text-xs font-medium text-white rounded-sm px-2.5 py-1.5 border border-blue-700 hover:bg-blue-700 transition-colors"
+                        >
+                            <BadgeCheckIcon size={14} /> Dev Done
+                        </button>
+                    )}
 
-                    <button
-                        type="button"
-                        onClick={() => setMarkReadyConfirm(true)}
-                        className="inline-flex items-center gap-1.5 bg-white text-xs font-medium text-gray-700 rounded-sm px-2.5 py-1.5 border border-gray-300 hover:bg-gray-50 transition-colors"
-                    >
-                        <SkipBack size={14} /> Reopen
-                    </button>
+                    {taskDetails?.status === TASK_STATUS.DEV_DONE.value && (
+                        <>
+                            <button
+                                type="button"
+                                onClick={handleReopen}
+                                className="inline-flex items-center gap-1.5 bg-white text-xs font-medium text-gray-700 rounded-sm px-2.5 py-1.5 border border-gray-300 hover:bg-gray-50 transition-colors"
+                            >
+                                <SkipBack size={14} /> Reopen
+                            </button>
 
-                    <button
-                        type="button"
-                        onClick={() => setMarkReadyConfirm(true)}
-                        className="inline-flex items-center gap-1.5 bg-green-600 text-xs font-medium text-white rounded-sm px-2.5 py-1.5 border border-green-700 hover:bg-green-700 transition-colors"
-                    >
-                        <ShieldCheck size={14} /> Mark Ready for Testing
-                    </button>
+                            <button
+                                type="button"
+                                onClick={() => setMarkReadyConfirm(true)}
+                                className="inline-flex items-center gap-1.5 bg-green-600 text-xs font-medium text-white rounded-sm px-2.5 py-1.5 border border-green-700 hover:bg-green-700 transition-colors"
+                            >
+                                <ShieldCheck size={14} /> Mark Ready for Testing
+                            </button>
+                        </>
+                    )}
 
                 </div>
 

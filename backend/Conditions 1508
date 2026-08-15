@@ -1,0 +1,46 @@
+
+developer 
+
+1. Normal Save Progress 
+2. if dev done then status become DEV_DONE & save prpgress , test cases enter button will hide
+3. if they reopen then status become IN_PROGRESS & save progress and test cses buttong will enable 
+4. if they click on mark as ready for testing then it will go in TESTING_QUEUED 
+
+tester - testing will get task in thire dashboard they see and  
+
+1. if tester click on start then status become => TESTING_IN_PROGRESS 
+2. if any of test cases failed then task goes in TESTING_FAILED
+3. if everytihg goes right they they have button completed => TESTING_COMPLETED 
+
+
+tl/manager  
+
+1. they can have close task means => dismiss => CLOSED 
+
+
+
+1. create one function that will take 
+  "taskId": 0,
+  "previousStatus": "string",
+  "newStatus": "string",
+  "remarks": "string",
+  "changedBy": 0,
+
+  create in useDeveloper => 
+  url => /Tracker/CreateTaskHistory
+
+  i will use that function and just pass paramter in that i hoep ymake it simple dont make complext
+
+so i will use this function when suppose anyone is start taks, dev done ,reopen , markready for testing , for developer 
+
+and for tester it will like  testing failed , testing completed , 
+
+and one more task closed 
+
+
+
+
+=> Tommarow Task 16-08 
+
+1. Work on TestDetails Page - test cases module 
+2. 

@@ -11,6 +11,8 @@ import OragnizationProfilePage from "../pages/Organization/OragnizationProfilePa
 import RegistrationPage from "../pages/Auth/RegistrationPage";
 import MyTasksPage from "../pages/Development/MyTasksPage";
 import TaskDetails from "../components/developement/TaskDetails";
+import TestingListPage from "../pages/Testing/TestingListPage";
+import TestingDetails from "../components/testing/TestingDetails";
 
 const AppRoutes = () => {
     return (
@@ -40,6 +42,11 @@ const AppRoutes = () => {
                     <Route path="development" >
                         <Route path="mytasks" element={<MyTasksPage/>} />
                         <Route path="taskdetails/:organizationId/:taskId/:action?" element={<TaskDetails/>} />
+                    </Route>
+
+                    <Route path="testing">
+                        <Route path="testinglist" element={<TestingListPage/>} />
+                        <Route path="testingDetails/:organizationId/:taskId/:action?" element={<TestingDetails/>} />
                     </Route>
 
                 </Route>
