@@ -34,7 +34,7 @@ const TestingList = () => {
                 setData(response.data);
             }
         }
-
+        
         fetchData();
 
     },[]);

@@ -23,7 +23,7 @@ const Header = ({ toggleSidebar }) => {
                     <Menu size={16} />     
                 </button>
                 <h1 className="text-lg font-semibold">
-                    Tracker <small className="">Intenal JIRA</small>
+                    Tracker <small className="text-gray-500">| Intenal JIRA Module</small>
                 </h1>
                 
             </div>
