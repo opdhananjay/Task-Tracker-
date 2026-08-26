@@ -687,7 +687,6 @@ const TaskDetails = () => {
                         )
                     })}
 
-
                 </div>
         
             </div>
@@ -731,7 +730,7 @@ const TaskDetails = () => {
                         </button>
                     )}
 
-                    {taskDetails?.status === TASK_STATUS.DEV_DONE.value && (
+                    {taskDetails?.status === TASK_STATUS.TESTING_FAILED.value && (
                         <>
                             <button
                                 type="button"
@@ -741,6 +740,12 @@ const TaskDetails = () => {
                                 <SkipBack size={14} /> Reopen
                             </button>
 
+                        </>
+                    )}
+
+
+                    {taskDetails?.status === TASK_STATUS.DEV_DONE.value && (
+                        <>
                             <button
                                 type="button"
                                 onClick={() => setMarkReadyConfirm(true)}
@@ -754,6 +759,10 @@ const TaskDetails = () => {
                 </div>
 
             </div>
+
+            
+            
+            
 
         </div>
         </>

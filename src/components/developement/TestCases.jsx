@@ -202,7 +202,7 @@ const TestCases = ({ taskId, GetTestCasesByTaskId, TestCasesSaveUpdateService, e
 
       <div className="">
         {showForm && (
-          <TestCaseTransaction taskId={taskId} testCase={selectedTestCase} mode={mode} TestCasesSaveUpdateService={TestCasesSaveUpdateService} getUserFromToken={getUserFromToken}  />
+          <TestCaseTransaction taskId={taskId} testCase={selectedTestCase} mode={'new'} TestCasesSaveUpdateService={TestCasesSaveUpdateService} getUserFromToken={getUserFromToken} />
         )}
       </div>
 

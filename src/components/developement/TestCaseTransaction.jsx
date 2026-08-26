@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { TEST_CASE_STATUS } from "../../Enums/appEnums";
 
-const TestCaseTransaction = ({ taskId, testCase, mode = "new", TestCasesSaveUpdateService, getUserFromToken }) => {
+const TestCaseTransaction = ({ taskId, testCase, mode = "new", TestCasesSaveUpdateService, getUserFromToken , onSuccess }) => {
   
   const isViewMode = mode === "view";
 
@@ -28,6 +28,9 @@ const TestCaseTransaction = ({ taskId, testCase, mode = "new", TestCasesSaveUpda
         console.log("Test case saved successfully");
       } else {
         console.error(response?.message || "Failed to save test case");
+      }
+      if(onSuccess){
+        onSuccess();
       }
     }
   };
