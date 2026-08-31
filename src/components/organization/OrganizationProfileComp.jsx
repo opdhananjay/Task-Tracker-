@@ -230,19 +230,23 @@ const OrganizationProfileComp = () => {
                     </div>
 
                     <div className="flex justify-end mt-5 gap-2">
-
-                            <button className="bg-gray-700 rounded-md px-4 py-2 text-white text-md cursor-pointer" >
-                                {getUserFromToken().organizationId ? 'Update Organization':'Create Organization'} 
-                            </button>
-
                             {
-                                getUserFromToken().organizationId && (
-                                    <button type="button" className="bg-green-500 text-white px-4 py-2 rounded" onClick={() => navigate("/users/create")}>
-                                        Create Users
-                                    </button>
+                                getUserFromToken().role.toString().toLocaleLowerCase() == 'manager' && (
+                                    <>
+                                        <button className="bg-gray-700 rounded-md px-4 py-2 text-white text-md cursor-pointer" >
+                                            {getUserFromToken().organizationId ? 'Update Organization':'Create Organization'} 
+                                        </button>
+
+                                        {
+                                            getUserFromToken().organizationId && (
+                                                <button type="button" className="bg-green-500 text-white px-4 py-2 rounded" onClick={() => navigate("/users/create")}>
+                                                    Create Users
+                                                </button>
+                                            )
+                                        }
+                                    </>
                                 )
                             }
-
                     </div>
 
                 </form>

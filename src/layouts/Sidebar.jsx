@@ -55,7 +55,7 @@ export const menus = [
   {
     name: 'Testing',
     icon: Bug,
-    roles: ['Tester', 'Manager', 'Admin'],
+    roles: ['Tester', 'Admin'],
     children: [
       {
         name: 'Testing List',
@@ -71,12 +71,12 @@ export const menus = [
   },
 
   {
-    name: 'Reports',
+    name: 'Reports (Pending)',
     icon: BarChart3,
     roles: ['TeamLeader', 'Manager', 'Developer', 'Tester','Admin'],
     children: [
-      { name: 'Developer Performance', path: '/reports/developer', roles: ['TeamLeader', 'Manager','Admin'] },
-      { name: 'Testing Reports', path: '/reports/testing', roles: ['Manager','Admin'] }
+      { name: 'Developer Performance', path: '/reports/developer', roles: ['TeamLeader', 'Manager', 'Developer', 'Tester','Admin'] },
+      { name: 'Testing Reports', path: '/reports/testing', roles: ['TeamLeader', 'Manager', 'Developer', 'Tester','Admin'] }
     ]
   },
 
@@ -95,9 +95,9 @@ export const menus = [
     name: 'Organization',
     path: '/organization',
     icon: Building,
-    roles: ['Manager','Admin'],
+    roles: ['Developer', 'TeamLeader', 'Manager', 'Tester','Admin'],
     children: [
-      { name:'Organization Profile', path: '/organization/profile' ,roles: ['Manager','Admin'] }
+      { name:'Organization Profile', path: '/organization/profile' ,roles: ['Developer', 'TeamLeader', 'Manager', 'Tester','Admin'] }
     ]
   },
 
@@ -135,7 +135,7 @@ const Sidebar = ({ isOpen, role }) => {
     >
       <nav className="flex flex-col gap-2 p-2">
 
-        {menus.map((item, index) => {
+        {filteredMenus.map((item, index) => {
           const Icon = item.icon;
           const isParentOpen = openMenu === index;
 

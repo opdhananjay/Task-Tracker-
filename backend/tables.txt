@@ -66,3 +66,13 @@ NOT_STARTED
 => "dont show mark as ready for testing button"
 => ""
 
+
+somee.com
+demo0987654321
+Titan@123
+
+workstation id=devops1.mssql.somee.com;packet size=4096;user id=demo0987654321_SQLLogin_1;pwd=inh3oft7lx;data source=devops1.mssql.somee.com;persist security info=False;initial 
+catalog=devops1;TrustServerCertificate=True
+
+https://devops.somee.com/swagger/index.html
+
