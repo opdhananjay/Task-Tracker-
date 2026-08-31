@@ -13,6 +13,8 @@ import MyTasksPage from "../pages/Development/MyTasksPage";
 import TaskDetails from "../components/developement/TaskDetails";
 import TestingListPage from "../pages/Testing/TestingListPage";
 import TestingDetails from "../components/testing/TestingDetails";
+import ReviewListPage from "../pages/Testing/ReviewListPage";
+import Profile from "../pages/Auth/Profile";
 
 const AppRoutes = () => {
     return (
@@ -47,7 +49,10 @@ const AppRoutes = () => {
                     <Route path="testing">
                         <Route path="testinglist" element={<TestingListPage/>} />
                         <Route path="testingDetails/:organizationId/:taskId/:action?" element={<TestingDetails/>} />
+                        <Route path="reviewList" element={<ReviewListPage/>} />
                     </Route>
+
+                    <Route path="profile" element={<Profile/>} />
 
                 </Route>
             </Routes>

@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { LoaderContext } from "../context/LoaderProvider";
 import { GetDeveloperOrgTaskLstService } from "../services/userService";
-import { CreateTaskCommentService, CreateTaskHistoryService, GetTaskByIdService, GetTaskCommentsByTaskIdService, GetTaskStatusHistoryService, SaveProgressService, SaveTestCasesService,GetTestCasesByTaskIdService } from "../services/taskService";
+import { CreateTaskCommentService, CreateTaskHistoryService, GetTaskByIdService, GetTaskCommentsByTaskIdService, GetTaskStatusHistoryService, SaveProgressService, SaveTestCasesService,GetTestCasesByTaskIdService, CreateTaskTestingLogAsyncService, GetTaskTestingDetailsService, GetTesterTestingLogsListService } from "../services/taskService";
 
 /**
  * @typedef {Object} TaskHistoryPayload
@@ -216,8 +216,58 @@ const useDeveloper = () => {
             setLoading(false);
         }
     }
+
+
+    const CreateTaskTestingLogAsync = async (payload) => {
+        try{
+            setError(null);
+            setLoading(true);
+            const response = await CreateTaskTestingLogAsyncService(payload);
+            return response.data;
+        }
+       catch(err){
+            setError(err.response?.data?.message || "Failed to create TaskTestingLog");
+            return null;
+        }
+        finally{
+            setLoading(false);
+        }
+    }
+
+    const GetTaskTestingDetails = async (payload) => {
+       try{
+            setError(null);
+            setLoading(true);
+            const response = await GetTaskTestingDetailsService(payload);
+            return response.data;
+        }
+       catch(err){
+            setError(err.response?.data?.message || "Failed to create TaskTestingLog");
+            return null;
+       }
+       finally{
+           setLoading(false);
+       }
+    }
+
+    const GetTesterTestingLogsList = async (testerId) => {
+        try{
+            setError(null);
+            setLoading(true);
+            const response = await GetTesterTestingLogsListService(testerId);
+            return response.data;
+        }
+        catch(err){
+            setError(err.response?.data?.message || "Failed to create TaskTestingLog");
+            return null;
+       }
+       finally{
+           setLoading(false);
+       }
+    }
+
     
-    return { GetOrgDevTasksLst, GetTaskDetails, TaskSaveProgressService, TestCasesSaveUpdateService, GetTestCasesByTaskId, GetTaskStatusHistoryByTaskId, GetTaskCommentsByTaskId, CreateTaskHistory, CreateTaskComment, error };
+    return { GetOrgDevTasksLst, GetTaskDetails, TaskSaveProgressService, TestCasesSaveUpdateService, GetTestCasesByTaskId, GetTaskStatusHistoryByTaskId, GetTaskCommentsByTaskId, CreateTaskHistory, CreateTaskComment, CreateTaskTestingLogAsync, GetTaskTestingDetails, GetTesterTestingLogsList, error };
     
 }
 

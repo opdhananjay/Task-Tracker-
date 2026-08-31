@@ -1,19 +1,32 @@
+import { useEffect, useState } from "react";
 import useAuth from "../../hooks/useAuth";
+import useDashboard from "../../hooks/useDashboard";
 import TaskList from "../Tasks/TaskList";
+import { useNavigate } from "react-router-dom";
 
-const DeveloperDashboard = () => {
+const DeveloperDashboard = ({userName,developerId}) => {
+  
+  const { GetDeveloperDashboard } = useDashboard();
 
-  //const {} = useAuth();
+  const [dashboardData,setDashboardData] = useState(null);
 
-    //   {
-    //   "totalTasks": 15,
-    //   "inProgressTasks": 5,
-    //   "pendingTestingTasks": 3,
-    //   "completedTasks": 7,
-    //   "recentActivities": [],
-    //   "upcomingDeadlines": [],
-    //   "priorityTasks": []
-    // }
+  const navigate = useNavigate();
+
+  useEffect(()=>{
+
+    const fetchDashboard = async () => {
+      const payload = {
+        developerId:developerId
+      }
+      const response = await GetDeveloperDashboard(payload);
+      if(response?.success && response?.data){
+        setDashboardData(response?.data);
+      }
+    }
+
+    fetchDashboard();
+
+  },[]);
 
   return (
     <>
@@ -22,7 +35,7 @@ const DeveloperDashboard = () => {
         <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-6">
           <div>
             <h1 className="text-3xl font-bold text-gray-900">
-              Welcome back, Dhananjay 👋 
+              Welcome back, {userName} 👋 
             </h1>
 
             <p className="text-gray-500 mt-1">
@@ -30,35 +43,44 @@ const DeveloperDashboard = () => {
             </p>
           </div>
 
-          <button className="mt-4 md:mt-0 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+          <button className="mt-4 md:mt-0 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+            onClick={()=>{
+              navigate('/development/mytasks')
+            }}>
             View My Tasks
           </button>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-4">
           <div className="bg-white rounded-xl shadow-sm border p-5">
             <p className="text-gray-500 text-sm">Total Tasks</p>
 
-            <h2 className="text-3xl font-bold mt-2">15</h2>
+            <h2 className="text-3xl font-bold mt-2">{dashboardData?.totalTasks}</h2>
           </div>
 
           <div className="bg-white rounded-xl shadow-sm border p-5">
             <p className="text-gray-500 text-sm">In Progress</p>
 
-            <h2 className="text-3xl font-bold text-blue-600 mt-2">5</h2>
+            <h2 className="text-3xl font-bold text-blue-600 mt-2">{dashboardData?.inProgressTasks}</h2>
           </div>
 
           <div className="bg-white rounded-xl shadow-sm border p-5">
             <p className="text-gray-500 text-sm">Pending Testing</p>
 
-            <h2 className="text-3xl font-bold text-yellow-600 mt-2">3</h2>
+            <h2 className="text-3xl font-bold text-yellow-600 mt-2">{dashboardData?.pendingTestingTasks}</h2>
           </div>
 
           <div className="bg-white rounded-xl shadow-sm border p-5">
             <p className="text-gray-500 text-sm">Completed</p>
 
-            <h2 className="text-3xl font-bold text-green-600 mt-2">7</h2>
+            <h2 className="text-3xl font-bold text-green-600 mt-2">{dashboardData?.completedTasks}</h2>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-sm border p-5">
+            <p className="text-gray-500 text-sm">Testing Failed</p>
+
+            <h2 className="text-3xl font-bold text-green-600 mt-2">{dashboardData?.testingFailedTasks}</h2>
           </div>
         </div>
 
@@ -71,7 +93,7 @@ const DeveloperDashboard = () => {
             </div>
 
             <div className="p-5">
-                <TaskList />
+                {/* <TaskList /> */}
             </div>
           </div>
 

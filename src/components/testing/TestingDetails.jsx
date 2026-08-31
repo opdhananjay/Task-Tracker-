@@ -37,7 +37,9 @@ const TestingDetails = () => {
     GetTestCasesByTaskId,
     GetTaskCommentsByTaskId,
     CreateTaskComment,
-    CreateTaskHistory
+    CreateTaskHistory,
+    CreateTaskTestingLogAsync,
+    GetTaskTestingDetails
   } = useDeveloper();
 
   const {
@@ -67,6 +69,8 @@ const TestingDetails = () => {
   const [testingFailedConfirm, setTestingFailedConfirm] = useState(false);
 
   const [testingCompletedConfirm, setTestingCompletedConfirm] = useState(false);
+
+  const [testingLogId, setTestingLogId] = useState(null);
 
   const handleBack = () => {
     navigate("/testing/testinglist");
@@ -139,6 +143,12 @@ const TestingDetails = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (taskDetails?.testerId && taskId) {
+      GetTaskTestingDet();
+    }
+  }, [taskDetails?.testerId, taskId]);
+
   const handleTestCaseTransactionResponse = () => {
       fetchTestCases();
       setOpenTestCases(false);
@@ -208,6 +218,8 @@ const TestingDetails = () => {
             remarks: "Testing started by tester"
         });
 
+        await CreateTaskTestingLogA(TASK_STATUS.TESTING_IN_PROGRESS.value,"Testing Started.");
+
         await fetchTaskDetails();
   };
 
@@ -220,6 +232,8 @@ const TestingDetails = () => {
           changedBy: Number(getUserFromToken()?.userId),
           remarks:''
       });
+
+      await CreateTaskTestingLogA(TASK_STATUS.TESTING_FAILED.value,"Testing failed");
 
       await fetchTaskDetails();
 
@@ -236,10 +250,52 @@ const TestingDetails = () => {
         remarks: "Testing completed successfully"
     });
 
-      await fetchTaskDetails();
+    await CreateTaskTestingLogA(TASK_STATUS.TESTING_COMPLETED.value,"Testing completed successfully");
 
-      setTestingCompletedConfirm(false);
+    await fetchTaskDetails();
+
+    setTestingCompletedConfirm(false);
   };
+
+  const CreateTaskTestingLogA = async (finalStatus,remarks = '') => {
+    
+    const payload = {
+      "id": testingLogId,
+      "taskId": taskId,
+      "testerId":taskDetails?.testerId,
+      "finalStatus":finalStatus,
+      "remarks":remarks
+    }
+
+    var response = await CreateTaskTestingLogAsync(payload);
+    debugger;
+    if(response?.success){
+       var testingLogIdstr = response?.data?.testingLogId || '';
+       setTestingLogId(testingLogIdstr);
+    } 
+    else{
+       toast.error(response?.message)
+    }
+  }
+
+  const GetTaskTestingDet = async () => {
+
+    const payload = {
+      "taskId": taskId,
+      "testerId": taskDetails?.testerId
+    }
+
+    var response = await GetTaskTestingDetails(payload);
+    debugger;
+    if(response?.success && response?.data){
+      var data = response?.data;
+      var testingLogIdStr = data[0].id;
+      setTestingLogId(testingLogIdStr);
+    }
+    else{
+       toast.error(response?.message)
+    }
+  }
 
 
   return (

@@ -145,7 +145,7 @@ const OrganizationProfileComp = () => {
                                     {errors.organizationName && <p className="text-red-500 text-sm mt-1">{errors.organizationName.message}</p>}
                                 </div>
                                 
-                            </div>
+                        </div>
 
 
                         <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">

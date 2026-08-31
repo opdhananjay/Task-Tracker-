@@ -44,11 +44,11 @@ export const menus = [
         path: '/development/mytasks',
         roles: ['Developer','Admin']
       },
-      {
-        name: 'Unit Testing',
-        path: '/development/unittesting',
-        roles: ['Developer','Admin']
-      }
+      // {
+      //   name: 'Unit Testing',
+      //   path: '/development/unittesting',
+      //   roles: ['Developer','Admin']
+      // }
     ]
   },
 
@@ -64,7 +64,7 @@ export const menus = [
       },
       {
         name: 'Review Tasks',
-        path: '/testing/review',
+        path: '/testing/reviewList',
         roles: ['Tester','Admin']
       }
     ]
@@ -114,6 +114,8 @@ export const menus = [
 const Sidebar = ({ isOpen, role }) => {
   const [openMenu, setOpenMenu] = useState(null);
   const location = useLocation();
+
+  console.log('role',role);
 
   /* Filter menus by role */
   const filteredMenus = menus

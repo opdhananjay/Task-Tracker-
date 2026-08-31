@@ -45,4 +45,16 @@ and one more task closed
 1. Work on TestDetails Page - test cases module 
 2. 
 
+=> Task 
 
+1. Work on Dashboard 
+
+1. Work on testing logs list for tester 
+2. work on  testing lgo trnsactio update 
+
+
+
+
+
+
+"No authenticationScheme was specified, and there was no DefaultChallengeScheme found. The default schemes can be set using either AddAuthentication(string defaultScheme) or AddAuthentication(Action<AuthenticationOptions> configureOptions)."

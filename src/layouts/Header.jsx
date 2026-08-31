@@ -1,17 +1,52 @@
 import { BellRing, LogOut, Menu, UserRoundPen } from "lucide-react";
 import useAuth from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import useMaster from "../hooks/useMaster";
 
 const Header = ({ toggleSidebar }) => {
 
     const navigate = useNavigate();
     
-    const { logout } = useAuth();
+    const { logout, getUserFromToken } = useAuth();
+
+    const { fetchDevelopersAndTestersAndOrg, userMap } = useMaster();
 
     const handleLogout = () => {
         logout();
         navigate('/');
     }
+
+    const [userName,setUserName] = useState('Unknown');
+
+    const fetchUser = async () => {
+        const user = getUserFromToken();
+        const userId = user.userId;
+        await fetchDevelopersAndTestersAndOrg(user.organizationId);
+        setUserName(userMap[userId]);
+    }
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            const user = getUserFromToken();
+
+            if (!user) {
+                return;
+            }
+
+            await fetchDevelopersAndTestersAndOrg(user.organizationId);
+        };
+
+        fetchUserData();
+    }, []);
+
+    useEffect(() => {
+        const user = getUserFromToken();
+
+        if (user?.userId && userMap) {
+            setUserName(userMap[user.userId] || "Unknown");
+        }
+    }, [userMap]);
 
     return (
       <>
@@ -44,7 +79,7 @@ const Header = ({ toggleSidebar }) => {
                 <div className="flex items-center gap-2 cursor-pointer">
                     <UserRoundPen color="#dd368f" />
                     <span className="hidden md:block text-sm">
-                        Admin
+                       {userName}
                     </span>
                 </div>
 

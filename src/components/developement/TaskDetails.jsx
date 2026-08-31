@@ -730,7 +730,7 @@ const TaskDetails = () => {
                         </button>
                     )}
 
-                    {taskDetails?.status === TASK_STATUS.TESTING_FAILED.value && (
+                    {(taskDetails?.status === TASK_STATUS.TESTING_FAILED.value || taskDetails?.status === TASK_STATUS.TESTING_COMPLETED.value) && (
                         <>
                             <button
                                 type="button"
@@ -742,7 +742,6 @@ const TaskDetails = () => {
 
                         </>
                     )}
-
 
                     {taskDetails?.status === TASK_STATUS.DEV_DONE.value && (
                         <>

@@ -1,10 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import ManagerDashboard from "../components/dashboard/ManagerDashboard";
 import TeamLeadDashboard from "../components/dashboard/TeamLeadDashboard";
 import DeveloperDashboard from "../components/dashboard/DeveloperDashboard";
 import TesterDashboard from "../components/dashboard/TesterDashboard";
 import useAuth from "../hooks/useAuth";
+import useMaster from "../hooks/useMaster";
 
 const DashboardPage = () => {
 
@@ -14,31 +15,64 @@ const DashboardPage = () => {
 
     const { getUserFromToken } = useAuth();
 
-    const userRole = getUserFromToken().role;
+    const { fetchDevelopersAndTestersAndOrg ,userMap } = useMaster();
+
+    const [userName,setUserName] = useState('Unknown');
+
+    const user = getUserFromToken();
+
+    const userRole = user.role;
+    
+    const userId = user.userId;
+
+    const orgId = user.organizationId;
+    
+    useEffect(() => {
+
+        const fetchData = async () => {
+
+          
+            const organizationId = user.organizationId;
+
+            await fetchDevelopersAndTestersAndOrg(organizationId);
+        };
+
+        fetchData();
+
+    }, []);
+
+    useEffect(() => {
+
+        if (userMap && user.userId) {
+            setUserName(userMap[user.userId] || "Unknown");
+        }
+
+    }, [userMap, user.userId]);
+
 
     const renderDashboard = () => {
 
-        // if(userRole == 'Manager'){
-        //      return <ManagerDashboard />
-        // }
+        if(userRole == 'Manager'){
+             return <ManagerDashboard userName={userName} orgId={orgId} />
+        }
 
-        // if(userRole == 'TeamLeader'){
-        //      return <TeamLeadDashboard />
-        // }
+        if(userRole == 'TeamLeader'){
+             return <TeamLeadDashboard userName={userName} teamLeaderId={userId}  />
+        }
 
-        // if(userRole == 'Developer'){
-        //      return <DeveloperDashboard />
-        // }
+        if(userRole == 'Developer'){
+             return <DeveloperDashboard userName={userName} developerId={userId} />
+        }
 
-        // if(userRole == 'Tester'){
-        //     return <TesterDashboard />
-        // }
+        if(userRole == 'Tester'){
+            return <TesterDashboard userName={userName} testerId={userId} />
+        }
 
-        return <DeveloperDashboard />
+        // return <DeveloperDashboard />
 
-        // return (<div>
-        //     No Dashboard founds
-        // </div>);
+        return (<div>
+            No Dashboard founds
+        </div>);
     }
 
 

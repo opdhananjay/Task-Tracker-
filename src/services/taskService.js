@@ -43,3 +43,15 @@ export const CreateTaskCommentService = (payload) => {
 export const GetTaskCommentsByTaskIdService = (taskId) => {
     return axiosInstance.get(`/Tracker/GetTaskComments/${taskId}`);
 }
+
+export const CreateTaskTestingLogAsyncService = (payload) => {
+    return axiosInstance.post('/Tracker/CreateUpdateTaskTestingLog',payload);
+}
+
+export const GetTaskTestingDetailsService = (payload) => {
+    return axiosInstance.post('/Tracker/GetTaskTestingDetails',payload);
+}
+
+export const GetTesterTestingLogsListService = (testerId) => {
+    return axiosInstance.get(`/Tracker/GetTesterTestingLogsList?testerId=${testerId}`);
+}
