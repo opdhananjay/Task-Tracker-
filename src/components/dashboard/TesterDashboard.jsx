@@ -49,27 +49,27 @@ const TesterDashboard = ({ userName, testerId }) => {
 
                     <div className="bg-white rounded-xl shadow-sm border p-5">
                         <p className="text-gray-500 text-sm">Testing Total Task</p>
-                        <h2 className="text-3xl font-bold mt-2">{dashboardData?.totalTasks}</h2>
+                        <h2 className="text-3xl font-bold mt-2">{dashboardData?.totalTasks || '0'}</h2>
                     </div>
 
                     <div className="bg-white rounded-xl shadow-sm border p-5">
                         <p className="text-gray-500 text-sm">Testing Queue</p>
-                        <h2 className="text-3xl font-bold mt-2">{dashboardData?.testingQueue}</h2>
+                        <h2 className="text-3xl font-bold mt-2">{dashboardData?.testingQueue || '0'}</h2>
                     </div>
 
                     <div className="bg-white rounded-xl shadow-sm border p-5">
                         <p className="text-gray-500 text-sm">Testing InProgress</p>
-                        <h2 className="text-3xl font-bold mt-2">{dashboardData?.testingInProgress}</h2>
+                        <h2 className="text-3xl font-bold mt-2">{dashboardData?.testingInProgress || '0'}</h2>
                     </div>
 
                     <div className="bg-white rounded-xl shadow-sm border p-5">
                         <p className="text-gray-500 text-sm">Testing Failed</p>
-                        <h2 className="text-3xl font-bold mt-2">{dashboardData?.testingFailed}</h2>
+                        <h2 className="text-3xl font-bold mt-2">{dashboardData?.testingFailed || '0'}</h2>
                     </div>
 
                     <div className="bg-white rounded-xl shadow-sm border p-5">
                         <p className="text-gray-500 text-sm">Testing Completed</p>
-                        <h2 className="text-3xl font-bold mt-2">{dashboardData?.testingCompleted}</h2>
+                        <h2 className="text-3xl font-bold mt-2">{dashboardData?.testingCompleted || '0'}</h2>
                     </div>
 
                 </div>

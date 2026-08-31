@@ -39,7 +39,7 @@ const DeveloperDashboard = ({userName,developerId}) => {
             </h1>
 
             <p className="text-gray-500 mt-1">
-              Here's what's happening with your tasks today.
+              Here's what's happening with your tasks &^ developement today.
             </p>
           </div>
 
@@ -56,31 +56,31 @@ const DeveloperDashboard = ({userName,developerId}) => {
           <div className="bg-white rounded-xl shadow-sm border p-5">
             <p className="text-gray-500 text-sm">Total Tasks</p>
 
-            <h2 className="text-3xl font-bold mt-2">{dashboardData?.totalTasks}</h2>
+            <h2 className="text-3xl font-bold mt-2">{dashboardData?.totalTasks  || '0'}</h2>
           </div>
 
           <div className="bg-white rounded-xl shadow-sm border p-5">
             <p className="text-gray-500 text-sm">In Progress</p>
 
-            <h2 className="text-3xl font-bold text-blue-600 mt-2">{dashboardData?.inProgressTasks}</h2>
+            <h2 className="text-3xl font-bold text-blue-600 mt-2">{dashboardData?.inProgressTasks  || '0'}</h2>
           </div>
 
           <div className="bg-white rounded-xl shadow-sm border p-5">
             <p className="text-gray-500 text-sm">Pending Testing</p>
 
-            <h2 className="text-3xl font-bold text-yellow-600 mt-2">{dashboardData?.pendingTestingTasks}</h2>
+            <h2 className="text-3xl font-bold text-yellow-600 mt-2">{dashboardData?.pendingTestingTasks || '0'}</h2>
           </div>
 
           <div className="bg-white rounded-xl shadow-sm border p-5">
             <p className="text-gray-500 text-sm">Completed</p>
 
-            <h2 className="text-3xl font-bold text-green-600 mt-2">{dashboardData?.completedTasks}</h2>
+            <h2 className="text-3xl font-bold text-green-600 mt-2">{dashboardData?.completedTasks || '0'}</h2>
           </div>
 
           <div className="bg-white rounded-xl shadow-sm border p-5">
             <p className="text-gray-500 text-sm">Testing Failed</p>
 
-            <h2 className="text-3xl font-bold text-green-600 mt-2">{dashboardData?.testingFailedTasks}</h2>
+            <h2 className="text-3xl font-bold text-green-600 mt-2">{dashboardData?.testingFailedTasks || '0'}</h2>
           </div>
         </div>
 

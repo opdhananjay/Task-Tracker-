@@ -56,7 +56,7 @@ const DashboardPage = () => {
              return <ManagerDashboard userName={userName} orgId={orgId} />
         }
 
-        if(userRole == 'TeamLeader'){
+        if(userRole == 'TeamLead'){
              return <TeamLeadDashboard userName={userName} teamLeaderId={userId}  />
         }
 

@@ -20,7 +20,7 @@ const TeamLeadDashboard = ({ userName,teamLeaderId }) => {
 
             const response = await GetTeamLeaderDashboard(payload);
 
-            if(response?.success){
+            if(response?.success && response?.data){
                 setDashboardData(response?.data);
             }
         }   
@@ -34,14 +34,14 @@ const TeamLeadDashboard = ({ userName,teamLeaderId }) => {
            <div className="min-h-screen bg-gray-50 p-6">
                 
                  {/* Header */}
-                <div className="flex flex-col md:flex-row md:justify-between md:items-center    ">
+                <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-6">
                     <div>
                         <h1 className="text-3xl font-bold text-gray-900">
                         Welcome back, {userName} 👋 
                         </h1>
 
                         <p className="text-gray-500 mt-1">
-                        Here's what's happening with your tasks today.
+                           Here's what's happening with your tasks & team today.
                         </p>
                     </div>
 
@@ -58,47 +58,47 @@ const TeamLeadDashboard = ({ userName,teamLeaderId }) => {
 
                     <div className="bg-white rounded-xl shadow-sm border p-5">
                         <p className="text-gray-500 text-sm">Total Tasks</p>
-                        <h2 className="text-3xl font-bold mt-2">{dashaboardData?.totalTasks}</h2>
+                        <h2 className="text-3xl font-bold mt-2">{dashaboardData?.totalTasks || '0'}</h2>
                     </div>
 
                     <div className="bg-white rounded-xl shadow-sm border p-5">
                         <p className="text-gray-500 text-sm">Not Started</p>
-                        <h2 className="text-3xl font-bold mt-2">{dashaboardData?.notStarted}</h2>
+                        <h2 className="text-3xl font-bold mt-2">{dashaboardData?.notStarted || '0'}</h2>
                     </div>
 
                     <div className="bg-white rounded-xl shadow-sm border p-5">
                         <p className="text-gray-500 text-sm">InProgress</p>
-                        <h2 className="text-3xl font-bold mt-2">{dashaboardData?.inProgress}</h2>
+                        <h2 className="text-3xl font-bold mt-2">{dashaboardData?.inProgress || '0'}</h2>
                     </div>
 
                     <div className="bg-white rounded-xl shadow-sm border p-5">
                         <p className="text-gray-500 text-sm">Testing Queue</p>
-                        <h2 className="text-3xl font-bold mt-2">{dashaboardData?.testingQueue}</h2>
+                        <h2 className="text-3xl font-bold mt-2">{dashaboardData?.testingQueue || '0'}</h2>
                     </div>
 
                     <div className="bg-white rounded-xl shadow-sm border p-5">
                         <p className="text-gray-500 text-sm">Testing InProgress</p>
-                        <h2 className="text-3xl font-bold mt-2">{dashaboardData?.testingInProgress}</h2>
+                        <h2 className="text-3xl font-bold mt-2">{dashaboardData?.testingInProgress || '0'}</h2>
                     </div>
 
                     <div className="bg-white rounded-xl shadow-sm border p-5">
                         <p className="text-gray-500 text-sm">Testing Failed</p>
-                        <h2 className="text-3xl font-bold mt-2">{dashaboardData?.testingFailed}</h2>
+                        <h2 className="text-3xl font-bold mt-2">{dashaboardData?.testingFailed || '0'}</h2>
                     </div>
 
                     <div className="bg-white rounded-xl shadow-sm border p-5">
                         <p className="text-gray-500 text-sm">Testing Completed</p>
-                        <h2 className="text-3xl font-bold mt-2">{dashaboardData?.testingCompleted}</h2>
+                        <h2 className="text-3xl font-bold mt-2">{dashaboardData?.testingCompleted || '0'}</h2>
                     </div>
 
                     <div className="bg-white rounded-xl shadow-sm border p-5">
                         <p className="text-gray-500 text-sm">Development Stopped</p>
-                        <h2 className="text-3xl font-bold mt-2">{dashaboardData?.developmentStopped}</h2>
+                        <h2 className="text-3xl font-bold mt-2">{dashaboardData?.developmentStopped || '0'}</h2>
                     </div>
 
                     <div className="bg-white rounded-xl shadow-sm border p-5">
                         <p className="text-gray-500 text-sm">Closed</p>
-                        <h2 className="text-3xl font-bold mt-2">{dashaboardData?.closed}</h2>
+                        <h2 className="text-3xl font-bold mt-2">{dashaboardData?.closed || '0'}</h2>
                     </div>
 
                 </div>

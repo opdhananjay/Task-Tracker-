@@ -21,16 +21,16 @@ export const menus = [
     name: 'Dashboard',
     path: '/dashboard',
     icon: LayoutDashboard,
-    roles: ['Developer', 'TeamLeader', 'Manager', 'Tester','Admin']
+    roles: ['Developer', 'TeamLead', 'Manager', 'Tester','Admin']
   },
 
   {
     name: 'Tasks',
     icon: ClipboardList,
-    roles: ['TeamLeader', 'Manager', 'Admin'],
+    roles: ['TeamLead', 'Manager', 'Admin'],
     children: [
-      { name: 'All Tasks', path: '/tasks/all', roles: ['TeamLeader','Manager', 'Admin'] },
-      { name: 'Create Task', path: '/tasks/create', roles: ['TeamLeader', 'Manager', 'Admin'] }
+      { name: 'All Tasks', path: '/tasks/all', roles: ['TeamLead','Manager', 'Admin'] },
+      { name: 'Create Task', path: '/tasks/create', roles: ['TeamLead', 'Manager', 'Admin'] }
     ]
   },
 
@@ -73,10 +73,10 @@ export const menus = [
   {
     name: 'Reports (Pending)',
     icon: BarChart3,
-    roles: ['TeamLeader', 'Manager', 'Developer', 'Tester','Admin'],
+    roles: ['TeamLead', 'Manager', 'Developer', 'Tester','Admin'],
     children: [
-      { name: 'Developer Performance', path: '/reports/developer', roles: ['TeamLeader', 'Manager', 'Developer', 'Tester','Admin'] },
-      { name: 'Testing Reports', path: '/reports/testing', roles: ['TeamLeader', 'Manager', 'Developer', 'Tester','Admin'] }
+      { name: 'Developer Performance', path: '/reports/developer', roles: ['TeamLead', 'Manager', 'Developer', 'Tester','Admin'] },
+      { name: 'Testing Reports', path: '/reports/testing', roles: ['TeamLead', 'Manager', 'Developer', 'Tester','Admin'] }
     ]
   },
 
@@ -95,9 +95,9 @@ export const menus = [
     name: 'Organization',
     path: '/organization',
     icon: Building,
-    roles: ['Developer', 'TeamLeader', 'Manager', 'Tester','Admin'],
+    roles: ['Developer', 'TeamLead', 'Manager', 'Tester','Admin'],
     children: [
-      { name:'Organization Profile', path: '/organization/profile' ,roles: ['Developer', 'TeamLeader', 'Manager', 'Tester','Admin'] }
+      { name:'Organization Profile', path: '/organization/profile' ,roles: ['Developer', 'TeamLead', 'Manager', 'Tester','Admin'] }
     ]
   },
 
@@ -105,7 +105,7 @@ export const menus = [
     name: 'Profile',
     path: '/profile',
     icon: User,
-    roles: ['Developer', 'TeamLeader', 'Manager', 'Tester','Admin']
+    roles: ['Developer', 'TeamLead', 'Manager', 'Tester','Admin']
   }
 ];
 
