@@ -1,9 +1,11 @@
-1. team leader dashaboard data is not correct 
-2. start testing button 2 time in testing detail screen 
-3. project name should dynamic need to do crud for that
-4. developer cant touch testigg fields in test cases and for developer it is not mandatory that testing fields 
-5. in testinfg details for test cases they cant touch developer fields they can only touch testing field which is 3 fields at the end
-6. when we start testing in testing details then testing status update section should refresh 
-7. when developer do dev done then update ended at date time with that current time 
-8. need to check tester dashboard data 
-9. 
+1. team leader dashaboard data is not correct => done 
+2. start testing button 2 time in testing detail screen => done 
+3. project name should dynamic need to do crud for that  => that will do in future 
+4. developer cant touch testigg fields in test cases and for developer it is not mandatory that testing fields => done 
+5. in testinfg details for test cases they cant touch developer fields they can only touch testing field which is 3 fields at the end => done 
+6. when we start testing in testing details then testing status update section should refresh  => done 
+7. when developer do dev done then update ended at date time with that current time => done 
+8. need to check tester dashboard data => done 
+
+
+

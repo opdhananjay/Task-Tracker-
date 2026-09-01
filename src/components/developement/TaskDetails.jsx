@@ -177,13 +177,22 @@ const TaskDetails = () => {
         }
     }
 
-    const saveProgressInternal = async (showToast = true) => {
+    const saveProgressInternal = async (showToast = true,isModifyPayload = false) => {
         if(!taskId || Number.isNaN(Number(taskId))){
             toast.error("No task found. Cannot save progress.");
             return false;
         }
 
-        const response = await TaskSaveProgressService(buildSaveProgressPayload());
+        var payloadObj = buildSaveProgressPayload();
+
+        if(isModifyPayload){
+            payloadObj = {
+                ...payloadObj,
+                devEndDateTime:getDateValue(new Date())
+            }
+        }
+
+        const response = await TaskSaveProgressService(payloadObj);
 
         if(!response){
             if(showToast){
@@ -205,7 +214,7 @@ const TaskDetails = () => {
         return false;
     }
 
-    const changeTaskStatus = async (newStatus, remarks, saveProgressFirst = false) => {
+    const changeTaskStatus = async (newStatus, remarks, saveProgressFirst = false, isModifyPayload = false) => {
         const changedBy = Number(getUserFromToken()?.userId);
 
         if(!Number.isInteger(changedBy) || changedBy <= 0){
@@ -214,7 +223,7 @@ const TaskDetails = () => {
         }
 
         if(saveProgressFirst){
-            const progressSaved = await saveProgressInternal(false);
+            const progressSaved = await saveProgressInternal(false,isModifyPayload);
             if(!progressSaved){
                 toast.error("Please save valid progress before updating status.");
                 return false;
@@ -251,7 +260,7 @@ const TaskDetails = () => {
     };
 
     const handleDevDone = async () => {
-        await changeTaskStatus(TASK_STATUS.DEV_DONE.value, "Task marked as development done", true);
+        await changeTaskStatus(TASK_STATUS.DEV_DONE.value, "Task marked as development done", true, true);
     }
 
     const handleReopen = async () => {

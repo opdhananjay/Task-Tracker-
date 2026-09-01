@@ -54,22 +54,22 @@ const TesterDashboard = ({ userName, testerId }) => {
 
                     <div className="bg-white rounded-xl shadow-sm border p-5">
                         <p className="text-gray-500 text-sm">Testing Queue</p>
-                        <h2 className="text-3xl font-bold mt-2">{dashboardData?.testingQueue || '0'}</h2>
+                        <h2 className="text-3xl font-bold mt-2">{dashboardData?.testingQueuedTasks || '0'}</h2>
                     </div>
 
                     <div className="bg-white rounded-xl shadow-sm border p-5">
                         <p className="text-gray-500 text-sm">Testing InProgress</p>
-                        <h2 className="text-3xl font-bold mt-2">{dashboardData?.testingInProgress || '0'}</h2>
+                        <h2 className="text-3xl font-bold mt-2">{dashboardData?.testingInProgressTasks || '0'}</h2>
                     </div>
 
                     <div className="bg-white rounded-xl shadow-sm border p-5">
-                        <p className="text-gray-500 text-sm">Testing Failed</p>
-                        <h2 className="text-3xl font-bold mt-2">{dashboardData?.testingFailed || '0'}</h2>
+                        <p className="text-gray-500 text-sm">Testing Failed (Review List)</p>
+                        <h2 className="text-3xl font-bold mt-2">{dashboardData?.testingFailedTasks || '0'}</h2>
                     </div>
 
                     <div className="bg-white rounded-xl shadow-sm border p-5">
-                        <p className="text-gray-500 text-sm">Testing Completed</p>
-                        <h2 className="text-3xl font-bold mt-2">{dashboardData?.testingCompleted || '0'}</h2>
+                        <p className="text-gray-500 text-sm">Testing Completed (Review List)</p>
+                        <h2 className="text-3xl font-bold mt-2">{dashboardData?.testingCompletedTasks || '0'}</h2>
                     </div>
 
                 </div>

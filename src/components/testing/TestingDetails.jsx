@@ -221,6 +221,8 @@ const TestingDetails = () => {
         await CreateTaskTestingLogA(TASK_STATUS.TESTING_IN_PROGRESS.value,"Testing Started.");
 
         await fetchTaskDetails();
+
+        await fetchTaskStatusHistory();
   };
 
   const handleTestingFailedConfirm = async () => {
@@ -236,6 +238,8 @@ const TestingDetails = () => {
       await CreateTaskTestingLogA(TASK_STATUS.TESTING_FAILED.value,"Testing failed");
 
       await fetchTaskDetails();
+
+      await fetchTaskStatusHistory()
 
       setTestingFailedConfirm(false);
   };
@@ -253,6 +257,8 @@ const TestingDetails = () => {
     await CreateTaskTestingLogA(TASK_STATUS.TESTING_COMPLETED.value,"Testing completed successfully");
 
     await fetchTaskDetails();
+    
+    await fetchTaskStatusHistory();
 
     setTestingCompletedConfirm(false);
   };
@@ -400,7 +406,7 @@ const TestingDetails = () => {
               {taskDetails?.status === TASK_STATUS.TESTING_QUEUED.value && (
                 <button
                   type="button"
-                  onClick={() => setStartTaskConfirm(true)}
+                  onClick={handleStartTesting}
                   className="flex items-center gap-1 bg-white-600  text-sm rounded-sm px-3 py-2 border border-gray-300 hover:bg-gray-100"
                 >
                   <Play size={16} /> Start Testing
@@ -578,15 +584,22 @@ const TestingDetails = () => {
               Test Cases
             </span>
 
-             <div className="rounded-md flex items-center justify-end mb-2 gap-2">
-              <span className="text-xs text-gray-500">{testCases.length} Test Cases </span>
-              <button onClick={handleNewCase}
-                className={`px-2 py-1 text-sm text-white rounded-md bg-gray-600`}
-                
-              >
-                 New Test Case 
-              </button>
-            </div>
+            {
+              false && (
+                <>
+                  <div className="rounded-md flex items-center justify-end mb-2 gap-2">
+                    <span className="text-xs text-gray-500">{testCases.length} Test Cases </span>
+                    <button onClick={handleNewCase}
+                      className={`px-2 py-1 text-sm text-white rounded-md bg-gray-600`}
+                      
+                    >
+                      New Test Case 
+                    </button>
+                  </div>
+                </>
+              )
+            }
+             
           </div>
 
 
@@ -658,7 +671,7 @@ const TestingDetails = () => {
                         TESTING QUEUED
                         Tester can start testing
                     ================================================== */}
-                    {taskDetails?.status === TASK_STATUS.TESTING_QUEUED.value && (
+                    {/* {taskDetails?.status === TASK_STATUS.TESTING_QUEUED.value && (
                         <button
                             type="button"
                             onClick={handleStartTesting}
@@ -674,8 +687,7 @@ const TestingDetails = () => {
                             <Play size={14} />
                             Start Testing
                         </button>
-                    )}
-
+                    )} */}
 
                     {/* =================================================
                         TESTING IN PROGRESS
