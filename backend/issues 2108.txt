@@ -7,5 +7,3 @@
 7. when developer do dev done then update ended at date time with that current time => done 
 8. need to check tester dashboard data => done 
 
-
-

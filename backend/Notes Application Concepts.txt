@@ -1,0 +1,52 @@
+
+React Notes Basic Topic Explanation => 
+
+1. npx create-react-app demoApplication 
+2. React Project Will Get Created | Have Scaffold - Inside Dummy Application so We Can Code it in 
+   ready to go application it helps to start developing start
+  
+packging of content => so many files in the application 
+
+Pulic Folder - it have content for application , favicons , images 
+pwa => progressive we application
+robots.txt => website crawel for seo 
+node_modules => have all dependiency for our project | when we create a react application we install multiple 
+				liabraries so thosed js packages is install in node module | it is being used code / webpack
+				- extra helper packages that help us 
+
+3. run project => npm start 
+
+4. components 
+	class based  => by using class keyword 
+	functional component => just like normal js function - it is modern way 
+	
+	const Header = () => {
+	
+	}
+	
+	JSX => Javascript XML - to create html like structure - used to created nodes inside dom tree
+	
+5.
+
+state / prop
+
+state => how you manage data in component \
+
+const [name,setName] = useState('Deepika');
+
+useState  - it is hook - react gives us hook , nothing but some utility function to create dynamic varibale
+		  - if we want to create dynamic varibale then we use use state 
+          - if there is state change then react application re-rendered 
+		  - react track of this varibale 
+		  - [name,setName] - useState hoook return an array first element is value & seconfd value is function => 
+		  - sqaure bracker is just a destructure only because useState return array thet have 2 value 
+
+prop =>  prop is way how you get data inside component 
+		 - you have to pass data to one component to another then we use props
+		 
+
+export 	       => multiple function we have in one js file , so that we have to use everywhere 
+export default => one js file only one thing is exported then we use expoer default
+
+
+
